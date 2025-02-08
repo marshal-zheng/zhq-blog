@@ -1,27 +1,45 @@
 import type { Site, SocialObjects } from "./types";
+import { t } from "i18next"
 
 export const SITE: Site = {
-  website: "https://astro-paper.pages.dev/", // replace this with your deployed domain
-  author: "Sat Naing",
+  website: "https://marsio.top", // replace this with your deployed domain
+  author: "ZHQ",
   profile: "https://satnaing.dev/",
   desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
-  title: "AstroPaper",
+  title: "ZHQ的博客",
   ogImage: "astropaper-og.jpg",
   lightAndDarkMode: true,
   postPerIndex: 4,
-  postPerPage: 3,
+  postPerPage: 6,
   scheduledPostMargin: 15 * 60 * 1000, // 15 minutes
   showArchives: true,
-  editPost: {
-    url: "https://github.com/satnaing/astro-paper/edit/main/src/content/blog",
-    text: "Suggest Changes",
-    appendFilePath: true,
-  },
+  // editPost: {
+  //   url: "https://github.com/satnaing/astro-paper/edit/main/src/content/blog",
+  //   text: "Suggest Changes",
+  //   appendFilePath: true,
+  // },
 };
 
+export const GISCUS = {
+  repo: "marshal-zheng/zhq-blog",
+  repoId: "R_kgDON1rzvw",
+  category: "Announcements",
+  categoryId: "DIC_kwDON1rzv84CmvJ8",
+  mapping: "pathname",
+  strict: "0",
+  reactionsEnabled: "0",
+  emitMetadata: "0",
+  inputPosition: "bottom",
+  theme: "preferred_color_scheme",
+  lang: "zh-CN",
+  loading: "",
+};
+
+
+
 export const LOCALE = {
-  lang: "en", // html lang code. Set this empty and default will be "en"
-  langTag: ["en-EN"], // BCP 47 Language Tags. Set this empty [] to use the environment default
+  lang: "zh",
+  langTag: ["zh-CN"]
 } as const;
 
 export const LOGO_IMAGE = {
@@ -34,27 +52,27 @@ export const LOGO_IMAGE = {
 export const SOCIALS: SocialObjects = [
   {
     name: "Github",
-    href: "https://github.com/satnaing/astro-paper",
-    linkTitle: ` ${SITE.title} on Github`,
+    href: "https://github.com/marshal-zheng",
+    linkTitle: t('githubInfo'),
     active: true,
   },
   {
     name: "Facebook",
-    href: "https://github.com/satnaing/astro-paper",
-    linkTitle: `${SITE.title} on Facebook`,
+    href: "https://www.facebook.com/marshall.zheng.3/",
+    linkTitle: t('facebookInfo'),
     active: true,
   },
   {
     name: "Instagram",
     href: "https://github.com/satnaing/astro-paper",
     linkTitle: `${SITE.title} on Instagram`,
-    active: true,
+    active: false,
   },
   {
     name: "LinkedIn",
     href: "https://github.com/satnaing/astro-paper",
     linkTitle: `${SITE.title} on LinkedIn`,
-    active: true,
+    active: false,
   },
   {
     name: "Mail",
@@ -64,9 +82,9 @@ export const SOCIALS: SocialObjects = [
   },
   {
     name: "X",
-    href: "https://github.com/satnaing/astro-paper",
-    linkTitle: `${SITE.title} on X`,
-    active: false,
+    href: "https://x.com/marshal_zheng",
+    linkTitle: t('xInfo'),
+    active: true,
   },
   {
     name: "Twitch",
@@ -112,9 +130,9 @@ export const SOCIALS: SocialObjects = [
   },
   {
     name: "Discord",
-    href: "https://github.com/satnaing/astro-paper",
-    linkTitle: `${SITE.title} on Discord`,
-    active: false,
+    href: "https://discord.com/channels/@me",
+    linkTitle: t('discordInfo'),
+    active: true,
   },
   {
     name: "GitLab",
@@ -139,6 +157,12 @@ export const SOCIALS: SocialObjects = [
     href: "https://github.com/satnaing/astro-paper",
     linkTitle: `${SITE.title} on Steam`,
     active: false,
+  },
+  {
+    name: "WeChat",
+    href: "javascript:;",
+    linkTitle: '',
+    active: true,
   },
   {
     name: "Telegram",

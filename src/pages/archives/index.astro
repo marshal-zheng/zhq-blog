@@ -3,10 +3,12 @@ import { getCollection } from "astro:content";
 import Card from "@components/Card";
 import Footer from "@components/Footer.astro";
 import Header from "@components/Header.astro";
-import { SITE } from "@config";
+import { SITE, LOCALE } from "@config";
 import Layout from "@layouts/Layout.astro";
 import Main from "@layouts/Main.astro";
 import getPostsByGroupCondition from "@utils/getPostsByGroupCondition";
+import { t } from "i18next"
+
 
 // Redirect to 404 page if `showArchives` config is false
 if (!SITE.showArchives) {
@@ -16,24 +18,24 @@ if (!SITE.showArchives) {
 const posts = await getCollection("blog", ({ data }) => !data.draft);
 
 const MonthMap: Record<string, string> = {
-  "1": "January",
-  "2": "February",
-  "3": "March",
-  "4": "April",
-  "5": "May",
-  "6": "June",
-  "7": "July",
-  "8": "August",
-  "9": "September",
-  "10": "October",
-  "11": "November",
-  "12": "December",
+  "1": t('january'),
+  "2": t('february'),
+  "3": t('march'),
+  "4": t('april'),
+  "5": t('may'),
+  "6": t('june'),
+  "7": t('july'),
+  "8": t('august'),
+  "9": t('september'),
+  "10": t('october'),
+  "11": t('november'),
+  "12": t('december'),
 };
 ---
 
 <Layout title={`Archives | ${SITE.title}`}>
   <Header activeNav="archives" />
-  <Main pageTitle="Archives" pageDesc="All the articles I've archived.">
+  <Main pageDesc={t('allArchivedArticles')}>
     {
       Object.entries(
         getPostsByGroupCondition(posts, post =>
@@ -44,7 +46,7 @@ const MonthMap: Record<string, string> = {
         .map(([year, yearGroup]) => (
           <div>
             <span class="text-2xl font-bold">{year}</span>
-            <sup class="text-sm">{yearGroup.length}</sup>
+            {/* <sup class="text-sm">{yearGroup.length}</sup> */}
             {Object.entries(
               getPostsByGroupCondition(
                 yearGroup,
@@ -56,7 +58,7 @@ const MonthMap: Record<string, string> = {
                 <div class="flex flex-col sm:flex-row">
                   <div class="mt-6 min-w-36 text-lg sm:my-6">
                     <span class="font-bold">{MonthMap[month]}</span>
-                    <sup class="text-xs">{monthGroup.length}</sup>
+                    {/* <sup class="text-xs">{monthGroup.length}</sup> */}
                   </div>
                   <ul>
                     {monthGroup

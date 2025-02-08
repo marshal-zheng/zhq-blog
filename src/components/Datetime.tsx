@@ -1,5 +1,6 @@
 import { LOCALE, SITE } from "@config";
 import type { CollectionEntry } from "astro:content";
+import { t } from "i18next"
 
 interface DatetimesProps {
   pubDatetime: string | Date;
@@ -40,7 +41,7 @@ export default function Datetime({
       </svg>
       {modDatetime && modDatetime > pubDatetime ? (
         <span className={`italic ${size === "sm" ? "text-sm" : "text-base"}`}>
-          Updated:
+          {`${t('updated')}:`}
         </span>
       ) : (
         <span className="sr-only">Published:</span>

@@ -1,6 +1,9 @@
 ---
+import { t } from "i18next"
+import { LOCALE } from "@config";
 // Remove current url path and remove trailing slash if exists
 const currentUrlPath = Astro.url.pathname.replace(/\/+$/, "");
+const lang = LOCALE.lang
 
 // Get url array from path
 // eg: /tags/tailwindcss => ['tags', 'tailwindcss']
@@ -8,8 +11,13 @@ const breadcrumbList = currentUrlPath.split("/").slice(1);
 
 // if breadcrumb is Home > Posts > 1 <etc>
 // replace Posts with Posts (page number)
-breadcrumbList[0] === "posts" &&
-  breadcrumbList.splice(0, 2, `Posts (page ${breadcrumbList[1] || 1})`);
+if (breadcrumbList[0] === "posts") {
+  if (lang === 'zh') {
+    breadcrumbList.splice(0, 2, `文章列表 (第 ${breadcrumbList[1] || 1} 页)`);
+  } else {
+    breadcrumbList.splice(0, 2, `Posts (page ${breadcrumbList[1] || 1})`);
+  }
+}
 
 // if breadcrumb is Home > Tags > [tag] > [page] <etc>
 // replace [tag] > [page] with [tag] (page number)
@@ -27,7 +35,7 @@ breadcrumbList[0] === "tags" &&
 <nav class="breadcrumb" aria-label="breadcrumb">
   <ul>
     <li>
-      <a href="/">Home</a>
+      <a href="/">{t('home')}</a>
       <span aria-hidden="true">&raquo;</span>
     </li>
     {
@@ -39,12 +47,12 @@ breadcrumbList[0] === "tags" &&
               aria-current="page"
             >
               {/* make the last part lowercase in Home > Tags > some-tag */}
-              {decodeURIComponent(breadcrumb)}
+              {t(decodeURIComponent(breadcrumb))}
             </span>
           </li>
         ) : (
           <li>
-            <a href={`/${breadcrumb}/`}>{breadcrumb}</a>
+            <a href={`/${breadcrumb}/`}>{t(breadcrumb)}</a>
             <span aria-hidden="true">&raquo;</span>
           </li>
         )

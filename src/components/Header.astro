@@ -2,6 +2,7 @@
 import { LOGO_IMAGE, SITE } from "@config";
 import Hr from "./Hr.astro";
 import LinkButton from "./LinkButton.astro";
+import { t } from "i18next"
 
 export interface Props {
   activeNav?: "posts" | "archives" | "tags" | "about" | "search";
@@ -57,20 +58,29 @@ const { activeNav } = Astro.props;
         <ul id="menu-items" class="display-none sm:flex">
           <li>
             <a href="/posts/" class={activeNav === "posts" ? "active" : ""}>
-              Posts
+              {t("posts")}
             </a>
           </li>
           <li>
             <a href="/tags/" class={activeNav === "tags" ? "active" : ""}>
-              Tags
+              {t('tags')}
             </a>
           </li>
           <li>
             <a href="/about/" class={activeNav === "about" ? "active" : ""}>
-              About
+              {t('about')}
             </a>
           </li>
           {
+            SITE.showArchives && (
+              <li>
+                <a href="/archives/" class={activeNav === "archives" ? "active" : ""}>
+                  {t('archivesLib')}
+                </a>
+              </li>
+            )
+          }
+          <!-- {
             SITE.showArchives && (
               <li>
                 <LinkButton
@@ -104,7 +114,7 @@ const { activeNav } = Astro.props;
                 </LinkButton>
               </li>
             )
-          }
+          } -->
           <li>
             <LinkButton
               href="/search/"

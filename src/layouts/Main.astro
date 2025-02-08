@@ -2,12 +2,12 @@
 import Breadcrumbs from "@components/Breadcrumbs.astro";
 
 interface StringTitleProp {
-  pageTitle: string;
+  pageTitle?: string;
   pageDesc?: string;
 }
 
 interface ArrayTitleProp {
-  pageTitle: [string, string];
+  pageTitle?: [string, string];
   titleTransition: string;
   pageDesc?: string;
 }

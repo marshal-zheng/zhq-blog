@@ -7,7 +7,9 @@ import Datetime from "@components/Datetime";
 import type { CollectionEntry } from "astro:content";
 import { slugifyStr } from "@utils/slugify";
 import ShareLinks from "@components/ShareLinks.astro";
+import Hr from "@components/Hr.astro";
 import { SITE } from "@config";
+import { t } from "i18next"
 
 export interface Props {
   post: CollectionEntry<"blog">;
@@ -59,6 +61,8 @@ const currentPostIndex = allPosts.findIndex(a => a.slug === post.slug);
 const prevPost = currentPostIndex !== 0 ? allPosts[currentPostIndex - 1] : null;
 const nextPost =
   currentPostIndex !== allPosts.length ? allPosts[currentPostIndex + 1] : null;
+
+console.log('theme', Astro.cookies.get('theme'))
 ---
 
 <Layout {...layoutProps}>
@@ -73,7 +77,7 @@ const nextPost =
         ><path
           d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"
         ></path>
-      </svg><span>Go back</span>
+      </svg><span>{t('goBack')}</span>
     </button>
   </div>
   <main id="main-content">
@@ -106,10 +110,10 @@ const nextPost =
             d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"
           ></path>
         </svg>
-        <span>Back to Top</span>
+        <span class="back-top">{t('backToTop')}</span>
       </button>
 
-      <ShareLinks />
+      <!-- <ShareLinks /> -->
     </div>
 
     <hr class="my-6 border-dashed" />
@@ -140,7 +144,7 @@ const nextPost =
               </>
             </svg>
             <div>
-              <span>Previous Post</span>
+              <span>{t('prevPost')}</span>
               <div class="text-sm text-skin-accent/85">{prevPost.title}</div>
             </div>
           </a>
@@ -153,7 +157,7 @@ const nextPost =
             class="flex w-full justify-end gap-1 text-right hover:opacity-75 sm:col-start-2"
           >
             <div>
-              <span>Next Post</span>
+              <span>{t('nextPost')}</span>
               <div class="text-sm text-skin-accent/85">{nextPost.title}</div>
             </div>
             <svg
@@ -177,18 +181,27 @@ const nextPost =
         )
       }
     </div>
+    <Hr noPadding class="mt-10" />
+    <div id="comments-container" class="mt-10 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md p-4">
+      <script src="https://giscus.app/client.js"
+        data-repo="marshal-zheng/zhq-blog"
+        data-repo-id="R_kgDON1rzvw"
+        data-category="Announcements"
+        data-category-id="DIC_kwDON1rzv84CmvJ8"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="0"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="catppuccin_mocha"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        async>
+      </script>
+    </div>
   </main>
   <Footer />
 </Layout>
-
-<style>
-  main {
-    @apply mx-auto w-full max-w-3xl px-4 pb-12;
-  }
-  .post-title {
-    @apply text-2xl font-semibold text-skin-accent;
-  }
-</style>
 
 <script is:inline data-astro-rerun>
   /** Create a progress indicator
@@ -257,17 +270,29 @@ const nextPost =
   /** Attaches copy buttons to code blocks in the document,
    * allowing users to copy code easily. */
   function attachCopyButtons() {
-    const copyButtonLabel = "Copy";
     const codeBlocks = Array.from(document.querySelectorAll("pre"));
 
     for (const codeBlock of codeBlocks) {
       const wrapper = document.createElement("div");
       wrapper.style.position = "relative";
+      wrapper.className = "pre-wrapper";
+      const style = document.createElement("style");
+      style.innerHTML = `
+        .pre-wrapper:hover .copy-code {
+          display: block;
+        }
+      `;
+      document.head.appendChild(style);
 
       const copyButton = document.createElement("button");
+      copyButton.style.fontSize = "0";
       copyButton.className =
-        "copy-code absolute right-3 -top-3 rounded bg-skin-card px-2 py-1 text-xs leading-4 text-skin-base font-medium";
-      copyButton.innerHTML = copyButtonLabel;
+        "copy-code absolute hidden right-2.5 top-2.5 p-1 cursor-pointer rounded bg-skin-card";
+      copyButton.innerHTML = `
+        <svg t="1738840988293" width="16" height="16" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4860" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200">
+          <path d="M704 960.832H192a64 64 0 0 1-64-64V320h64v576.896h512v64zM832.64 832H320a60.992 60.992 0 0 1-64-59.008V123.008A60.992 60.992 0 0 1 320 64h279.68a63.552 63.552 0 0 1 45.696 19.2l232.32 236.8a63.552 63.552 0 0 1 18.304 44.8v408a60.992 60.992 0 0 1-63.36 59.2zM320 128v640h512V384.832H576V128z m320 41.344v151.488h148.544z" fill="currentColor" fill-opacity="0.9" p-id="4861"></path>
+        </svg>
+      `;
       codeBlock.setAttribute("tabindex", "0");
       codeBlock.appendChild(copyButton);
 
@@ -287,10 +312,16 @@ const nextPost =
       await navigator.clipboard.writeText(text ?? "");
 
       // visual feedback that task is completed
-      button.innerText = "Copied";
+      button.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" class="bi bi-check" viewBox="0 0 16 16">
+        <path  fill="#1AAD19" d="M13.854 3.646a.5.5 0 0 0-.708 0L7 9.793 4.854 7.646a.5.5 0 1 0-.708.708l2.5 2.5a.5.5 0 0 0 .708 0l6.5-6.5a.5.5 0 0 0 0-.708z"/>
+      </svg>`;
 
       setTimeout(() => {
-        button.innerText = copyButtonLabel;
+        button.innerHTML = `
+          <svg t="1738840988293" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4860" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" height="200">
+            <path d="M704 960.832H192a64 64 0 0 1-64-64V320h64v576.896h512v64zM832.64 832H320a60.992 60.992 0 0 1-64-59.008V123.008A60.992 60.992 0 0 1 320 64h279.68a63.552 63.552 0 0 1 45.696 19.2l232.32 236.8a63.552 63.552 0 0 1 18.304 44.8v408a60.992 60.992 0 0 1-63.36 59.2zM320 128v640h512V384.832H576V128z m320 41.344v151.488h148.544z" fill="currentColor" fill-opacity="0.9" p-id="4861"></path>
+          </svg>
+        `;
       }, 700);
     }
   }
@@ -311,3 +342,12 @@ const nextPost =
     window.scrollTo({ left: 0, top: 0, behavior: "instant" })
   );
 </script>
+
+<style>
+  main {
+    @apply mx-auto w-full max-w-3xl px-4 pb-12;
+  }
+  .post-title {
+    @apply text-2xl font-semibold text-skin-accent;
+  }
+</style>
