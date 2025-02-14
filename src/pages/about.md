@@ -4,7 +4,7 @@ title: "关于ZHQ"
 ---
 ## 介绍
 
-📛 花名「山石」，也可以叫我「HQ」  
+📛 花名「玉滴子」，也可以叫我「HQ」  
 🖥️ 开源爱好者，[vue-grid-layout](https://github.com/marshal-zheng/vue-grid-layout)、[vue-resizable](https://github.com/marshal-zheng/vue-resizable)、[vue-draggable](https://github.com/marshal-zheng/vue-draggable)、[vue-split-pane](https://github.com/marshal-zheng/vue-split-pane) 等库作者
 ## 如何找到我
 
