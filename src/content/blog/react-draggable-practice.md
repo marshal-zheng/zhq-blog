@@ -34,7 +34,9 @@ description: '本文从零开始，详细介绍如何用 React 实现一个可�
 
 在 Draggable 中，我们会通过 transform: translate(x, y) 来动态调整元素的位置。例如：
 
-    transform: translate(100px, 200px);
+```css
+transform: translate(100px, 200px);
+```
 
 这表示将元素在 X 轴方向移动 100 像素，在 Y 轴方向移动 200 像素。这种方式不仅流畅，还能避免拖拽过程中的卡顿问题。
 
@@ -60,8 +62,10 @@ description: '本文从零开始，详细介绍如何用 React 实现一个可�
 
 利用鼠标的当前位置与初始位置，可以计算出鼠标的偏移量：
 
-    const deltaX = e.clientX - startX;
-    const deltaY = e.clientY - startY;
+```js
+const deltaX = e.clientX - startX;
+const deltaY = e.clientY - startY;
+```
 
 然后，将这个偏移量加到元素的初始位置上，得出新的位置。
 
@@ -85,58 +89,64 @@ description: '本文从零开始，详细介绍如何用 React 实现一个可�
 
 首先，打开 <a href="https://codesandbox.io/p/sandbox/vite-react-ts-sd7bp" target="_blank" rel="noopener">Codesandbox</a> 并创建一个 Draggable.tsx组件, 并在App.tsx中导入组件`import Draggable from './Draggable'`
 
-    import React, { useState } from 'react';
-    import './App.scss';
+```js
+import React, { useState } from 'react';
+import './App.scss';
 
-    import Draggable from './Draggable';
+import Draggable from './Draggable';
 
-    function App() {
-      return (
-        <div className="App">
-          <Draggable>I can be dragged anywhere</Draggable>
-        </div>
-      );
-    }
+function App() {
+  return (
+    <div className="App">
+      <Draggable>I can be dragged anywhere</Draggable>
+    </div>
+  );
+}
 
-    export default App;
+export default App;
+```
 
 #### **第二步：创建 Draggable 组件**
 
 在 `Draggable.tsx` 中，先写一个简单的组件框架。这里暂时只做一件事：让它渲染传递的子元素，并设置基本的样式和事件
 
-    import React from "react";
+```js
+import React from "react";
 
-    const Draggable = ({ children }) => {
-      return (
-        <div
-          style={{
-            position: "absolute",
-            cursor: "grab"
-          }}
-        >
-          {children}
-        </div>
-      );
-    };
+const Draggable = ({ children }) => {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        cursor: "grab"
+      }}
+    >
+      {children}
+    </div>
+  );
+};
 
-    export default Draggable;
+export default Draggable;
+```
 
 在`App.css`中添加如下样式
 
-    .react-draggable {
-      cursor: move;
-      background: #ccc;
-      border: 1px solid black;
-      border-radius: 3px;
-      width: 100px;
-      height: 100px;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      &::selection {
-        background: transparent;
-      }
-    }
+```css
+.react-draggable {
+  cursor: move;
+  background: #ccc;
+  border: 1px solid black;
+  border-radius: 3px;
+  width: 100px;
+  height: 100px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  &::selection {
+    background: transparent;
+  }
+}
+```
 
 > 👉 **运行看看效果**：你会发现页面中显示了一个“I can be dragged anywhere”的块，但它现在并不能拖动。别急，接下来会添加事件，让它动起来。
 
@@ -150,32 +160,34 @@ description: '本文从零开始，详细介绍如何用 React 实现一个可�
 
 这里先来实现按下和移动事件。修改 `Draggable.tsx`：
 
-    import React, { useState } from 'react';
+```js
+import React, { useState } from 'react';
 
-    const Draggable = ({ children }: { children: React.ReactNode }) => {
-      const handleMouseDown = (e: React.MouseEvent) => {
-        console.log('Mouse Down:', e.clientX, e.clientY);
-      };
+const Draggable = ({ children }: { children: React.ReactNode }) => {
+  const handleMouseDown = (e: React.MouseEvent) => {
+    console.log('Mouse Down:', e.clientX, e.clientY);
+  };
 
-      const handleMouseMove = (e: React.MouseEvent) => {
-        console.log('Mouse Move:', e.clientX, e.clientY);
-      };
-      const handleMouseUp = (e: React.MouseEvent) => {
-        console.log('Mouse Up');
-      };
-      return (
-        <div
-          className="react-draggable"
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-        >
-          {children}
-        </div>
-      );
-    };
+  const handleMouseMove = (e: React.MouseEvent) => {
+    console.log('Mouse Move:', e.clientX, e.clientY);
+  };
+  const handleMouseUp = (e: React.MouseEvent) => {
+    console.log('Mouse Up');
+  };
+  return (
+    <div
+      className="react-draggable"
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+    >
+      {children}
+    </div>
+  );
+};
 
-    export default Draggable;
+export default Draggable;
+```
 
 上面添加了 `onMouseDown`、`onMouseMove` 和 `onMouseUp` 三个监听事件，用于识别拖拽的开始、进行中和结束状态。从 Console 中可以看到事件监听已经生效，但这里存在一个问题：功能上希望只有在鼠标按下时才开始执行 `move` 操作。
 
@@ -183,37 +195,39 @@ description: '本文从零开始，详细介绍如何用 React 实现一个可�
 
 这里可以通过添加一个 `isDragging` 标志来解决问题。在 `onMouseDown` 中将 `isDragging` 设置为 `true`，在 `onMouseUp` 中将其设置为 `false`，从而控制拖拽逻辑的启停;优化后的代码如下:
 
-    import React, { useState } from 'react';
+```js
+import React, { useState } from 'react';
 
-    const Draggable = ({ children }: { children: React.ReactNode }) => {
-      const [isDragging, setIsDragging] = useState(false);
+const Draggable = ({ children }: { children: React.ReactNode }) => {
+  const [isDragging, setIsDragging] = useState(false);
 
-      const handleMouseDown = (e: React.MouseEvent) => {
-        setIsDragging(true);
-        console.log('Mouse Down:', e.clientX, e.clientY);
-      };
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    console.log('Mouse Down:', e.clientX, e.clientY);
+  };
 
-      const handleMouseMove = (e: React.MouseEvent) => {
-        if (!isDragging) return;
-        console.log('Mouse Move:', e.clientX, e.clientY);
-      };
-      const handleMouseUp = (e: React.MouseEvent) => {
-        setIsDragging(false);
-        console.log('Mouse Up');
-      };
-      return (
-        <div
-          className="react-draggable"
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-        >
-          {children}
-        </div>
-      );
-    };
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    console.log('Mouse Move:', e.clientX, e.clientY);
+  };
+  const handleMouseUp = (e: React.MouseEvent) => {
+    setIsDragging(false);
+    console.log('Mouse Up');
+  };
+  return (
+    <div
+      className="react-draggable"
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+    >
+      {children}
+    </div>
+  );
+};
 
-    export default Draggable;
+export default Draggable;
+```
 
 #### **第四步：让元素动起来**
 
@@ -293,25 +307,27 @@ description: '本文从零开始，详细介绍如何用 React 实现一个可�
 
 首先，我们观察已经实现代码，会发现每次 `mousemove` 事件触发时，我们都会调用 `setState` 更新位置状态。这种操作会直接导致组件重新渲染，但实际上，拖拽中的位置变化只是一个临时状态，并不需要每次都通过 React 的状态管理来触发渲染。我们可以使用 `useRef` 来保存这些临时数据，让拖拽的逻辑独立于 React 的状态管理。
 
-    const downPosition = useRef({ x: 0, y: 0 });
-    const upPosition = useRef({ x: 0, y: 0 });
+```js
+const downPosition = useRef({ x: 0, y: 0 });
+const upPosition = useRef({ x: 0, y: 0 });
 
-    const handleMouseDown = (e: React.MouseEvent) => {
-      setIsDragging(true);
-      downPosition.current = { x: e.clientX, y: e.clientY };
-    };
+const handleMouseDown = (e: React.MouseEvent) => {
+  setIsDragging(true);
+  downPosition.current = { x: e.clientX, y: e.clientY };
+};
 
-    const handleMouseMove = (e: React.MouseEvent) => {
-      if (!isDragging) return;
+const handleMouseMove = (e: React.MouseEvent) => {
+  if (!isDragging) return;
 
-      const deltaX = e.clientX - downPosition.current.x;
-      const deltaY = e.clientY - downPosition.current.y;
+  const deltaX = e.clientX - downPosition.current.x;
+  const deltaY = e.clientY - downPosition.current.y;
 
-      setPosition({
-        x: upPosition.current.x + deltaX,
-        y: upPosition.current.y + deltaY,
-      });
-    };
+  setPosition({
+    x: upPosition.current.x + deltaX,
+    y: upPosition.current.y + deltaY,
+  });
+};
+```
 
 这里拖拽临时我们把数据存储在 `useRef` 中，减少 `setState` 的调用频率, 避免了不必要的重新渲染。
 
@@ -319,28 +335,30 @@ description: '本文从零开始，详细介绍如何用 React 实现一个可�
 
 即使减少了状态更新的次数，鼠标移动事件仍会频繁触发样式更新（通过 `setPosition`）。为了解决这个问题，我们可以使用 `requestAnimationFrame` 将渲染频率限制到每秒 60 次，从而进一步提升性能。
 
-    let animationFrame: number;
+```js
+let animationFrame: number;
 
-    const handleMouseMove = (e: React.MouseEvent) => {
-      if (!isDragging) return;
+const handleMouseMove = (e: React.MouseEvent) => {
+  if (!isDragging) return;
 
-      const deltaX = e.clientX - downPosition.current.x;
-      const deltaY = e.clientY - downPosition.current.y;
+  const deltaX = e.clientX - downPosition.current.x;
+  const deltaY = e.clientY - downPosition.current.y;
 
-      cancelAnimationFrame(animationFrame);
-      animationFrame = requestAnimationFrame(() => {
-        setPosition({
-          x: upPosition.current.x + deltaX,
-          y: upPosition.current.y + deltaY,
-        });
-      });
-    };
+  cancelAnimationFrame(animationFrame);
+  animationFrame = requestAnimationFrame(() => {
+    setPosition({
+      x: upPosition.current.x + deltaX,
+      y: upPosition.current.y + deltaY,
+    });
+  });
+};
 
-    const handleMouseUp = () => {
-      cancelAnimationFrame(animationFrame);
-      setIsDragging(false);
-      upPosition.current = { ...position };
-    };
+const handleMouseUp = () => {
+  cancelAnimationFrame(animationFrame);
+  setIsDragging(false);
+  upPosition.current = { ...position };
+};
+```
 
 通过使用 `requestAnimationFrame` 将样式更新与浏览器的刷新周期同步，避免过度更新导致卡顿
 
@@ -350,33 +368,35 @@ description: '本文从零开始，详细介绍如何用 React 实现一个可�
 
 每次组件重新渲染时，事件处理函数（如 `handleMouseMove` 和 `handleMouseUp`）都会重新创建。在我们的实现中，这些函数会通过 `useEffect` 绑定到全局事件，函数的重新创建会导致多余的事件解绑和绑定操作。通过 `useCallback` 缓存这些函数，可以避免不必要的重复操作。
 
-    import { useCallback } from 'react';
+```js
+import { useCallback } from 'react';
 
-    const handleMouseDown = useCallback((e: React.MouseEvent) => {
-      setIsDragging(true);
-      downPosition.current = { x: e.clientX, y: e.clientY };
-    }, []);
+const handleMouseDown = useCallback((e: React.MouseEvent) => {
+  setIsDragging(true);
+  downPosition.current = { x: e.clientX, y: e.clientY };
+}, []);
 
-    const handleMouseMove = useCallback((e: MouseEvent) => {
-      if (!isDragging) return;
+const handleMouseMove = useCallback((e: MouseEvent) => {
+  if (!isDragging) return;
 
-      const deltaX = e.clientX - downPosition.current.x;
-      const deltaY = e.clientY - downPosition.current.y;
+  const deltaX = e.clientX - downPosition.current.x;
+  const deltaY = e.clientY - downPosition.current.y;
 
-      cancelAnimationFrame(animationFrame);
-      animationFrame = requestAnimationFrame(() => {
-        setPosition({
-          x: upPosition.current.x + deltaX,
-          y: upPosition.current.y + deltaY,
-        });
-      });
-    }, [isDragging]);
+  cancelAnimationFrame(animationFrame);
+  animationFrame = requestAnimationFrame(() => {
+    setPosition({
+      x: upPosition.current.x + deltaX,
+      y: upPosition.current.y + deltaY,
+    });
+  });
+}, [isDragging]);
 
-    const handleMouseUp = useCallback(() => {
-      cancelAnimationFrame(animationFrame);
-      setIsDragging(false);
-      upPosition.current = { ...position };
-    }, [position]);
+const handleMouseUp = useCallback(() => {
+  cancelAnimationFrame(animationFrame);
+  setIsDragging(false);
+  upPosition.current = { ...position };
+}, [position]);
+```
 
 使用 `useCallback` 缓存函数引用，避免每次渲染时创建新函数, 减少全局事件的解绑和重新绑定操作，提高内存使用效率。
 
@@ -390,38 +410,40 @@ description: '本文从零开始，详细介绍如何用 React 实现一个可�
 
 在现有的 `handleMouseMove` 方法中，我们只需要对 `x` 和 `y` 坐标分别加一个边界判断：
 
-    const handleMouseMove = useCallback(
-        (e: MouseEvent) => {
-          if (!isDragging) return;
+```js
+const handleMouseMove = useCallback(
+  (e: MouseEvent) => {
+    if (!isDragging) return;
 
-          const deltaX = e.clientX - downPosition.current.x;
-          const deltaY = e.clientY - downPosition.current.y;
+    const deltaX = e.clientX - downPosition.current.x;
+    const deltaY = e.clientY - downPosition.current.y;
 
-          const rect = elementRef.current?.getBoundingClientRect();
-          const elementWidth = rect?.width || 0;
-          const elementHeight = rect?.height || 0;
+    const rect = elementRef.current?.getBoundingClientRect();
+    const elementWidth = rect?.width || 0;
+    const elementHeight = rect?.height || 0;
 
-          const leftBound = 0;
-          const topBound = 0;
-          const rightBound = window.innerWidth - elementWidth;
-          const bottomBound = window.innerHeight - elementHeight;
+    const leftBound = 0;
+    const topBound = 0;
+    const rightBound = window.innerWidth - elementWidth;
+    const bottomBound = window.innerHeight - elementHeight;
 
-          const newX = Math.max(
-            leftBound,
-            Math.min(rightBound, upPosition.current.x + deltaX),
-          );
-          const newY = Math.max(
-            topBound,
-            Math.min(bottomBound, upPosition.current.y + deltaY),
-          );
+    const newX = Math.max(
+      leftBound,
+      Math.min(rightBound, upPosition.current.x + deltaX),
+    );
+    const newY = Math.max(
+      topBound,
+      Math.min(bottomBound, upPosition.current.y + deltaY),
+    );
 
-          cancelAnimationFrame(animationFrame);
-          animationFrame = requestAnimationFrame(() => {
-            setPosition({ x: newX, y: newY });
-          });
-        },
-        [isDragging],
-      );
+    cancelAnimationFrame(animationFrame);
+    animationFrame = requestAnimationFrame(() => {
+      setPosition({ x: newX, y: newY });
+    });
+  },
+  [isDragging],
+);
+```
 
 > 我们看到上面使用了 `getBoundingClientRect`，它在这里主要用于动态获取拖拽元素的实际宽度和高度。这在处理拖拽边界时尤为重要，因为拖拽元素的尺寸并不是固定的，可能会因为样式、内容或屏幕尺寸的变化而有所不同。通过 `getBoundingClientRect`，我们可以实时计算出元素的宽高，从而确保在限制拖拽范围时，右下边界能够正确减去元素的尺寸，避免超出视窗范围或者触发滚动条。这种动态获取尺寸的方式，使得拖拽逻辑更加通用和精准，适配各种复杂的布局场景。
 
@@ -431,125 +453,129 @@ description: '本文从零开始，详细介绍如何用 React 实现一个可�
 
 组件新增 `bounds` 属性后，我们需要修改 `handleMouseMove` 方法，让它动态适配用户传递的边界值：
 
-    const handleMouseMove = useCallback((e: MouseEvent) => {
-      if (!isDragging) return;
+```js
+const handleMouseMove = useCallback((e: MouseEvent) => {
+  if (!isDragging) return;
 
-      const deltaX = e.clientX - downPosition.current.x;
-      const deltaY = e.clientY - downPosition.current.y;
+  const deltaX = e.clientX - downPosition.current.x;
+  const deltaY = e.clientY - downPosition.current.y;
 
-      const rect = elementRef.current?.getBoundingClientRect();
-      const elementWidth = rect?.width || 0;
-      const elementHeight = rect?.height || 0;
+  const rect = elementRef.current?.getBoundingClientRect();
+  const elementWidth = rect?.width || 0;
+  const elementHeight = rect?.height || 0;
 
-      const leftBound = bounds?.left ?? 0;
-      const topBound = bounds?.top ?? 0;
-      const rightBound = bounds?.right !== undefined 
-        ? bounds.right - elementWidth 
-        : window.innerWidth - elementWidth;
-      const bottomBound = bounds?.bottom !== undefined 
-        ? bounds.bottom - elementHeight 
-        : window.innerHeight - elementHeight;
+  const leftBound = bounds?.left ?? 0;
+  const topBound = bounds?.top ?? 0;
+  const rightBound = bounds?.right !== undefined 
+    ? bounds.right - elementWidth 
+    : window.innerWidth - elementWidth;
+  const bottomBound = bounds?.bottom !== undefined 
+    ? bounds.bottom - elementHeight 
+    : window.innerHeight - elementHeight;
 
-      const newX = Math.max(leftBound, Math.min(rightBound, upPosition.current.x + deltaX));
-      const newY = Math.max(topBound, Math.min(bottomBound, upPosition.current.y + deltaY));
+  const newX = Math.max(leftBound, Math.min(rightBound, upPosition.current.x + deltaX));
+  const newY = Math.max(topBound, Math.min(bottomBound, upPosition.current.y + deltaY));
 
-      cancelAnimationFrame(animationFrame);
-      animationFrame = requestAnimationFrame(() => {
-        setPosition({ x: newX, y: newY });
-      });
-    }, [isDragging, bounds]);
+  cancelAnimationFrame(animationFrame);
+  animationFrame = requestAnimationFrame(() => {
+    setPosition({ x: newX, y: newY });
+  });
+}, [isDragging, bounds]);
+```
 
 通过这个改动，`bounds` 的默认值是窗口的边界（`0` 到 `window.innerWidth` 和 `window.innerHeight`），但用户也可以根据实际需求传入更精确的范围
 
 ## 完整代码
 
-    import React, { useState, useRef, useEffect, useCallback } from 'react';
+```js
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 
-    const Draggable = ({ 
-      children, 
-      bounds 
-    }: { 
-      children: React.ReactNode; 
-      bounds?: { left: number; top: number; right: number; bottom: number } 
-    }) => {
-      const [position, setPosition] = useState({ x: 0, y: 0 });
-      const [isDragging, setIsDragging] = useState(false);
+const Draggable = ({ 
+  children, 
+  bounds 
+}: { 
+  children: React.ReactNode; 
+  bounds?: { left: number; top: number; right: number; bottom: number } 
+}) => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
 
-      const downPosition = useRef({ x: 0, y: 0 });
-      const upPosition = useRef({ x: 0, y: 0 });
-      const elementRef = useRef<HTMLDivElement | null>(null);
-      let animationFrame: number;
+  const downPosition = useRef({ x: 0, y: 0 });
+  const upPosition = useRef({ x: 0, y: 0 });
+  const elementRef = useRef<HTMLDivElement | null>(null);
+  let animationFrame: number;
 
-      const handleMouseDown = useCallback((e: React.MouseEvent) => {
-        setIsDragging(true);
-        downPosition.current = { x: e.clientX, y: e.clientY };
-      }, []);
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    setIsDragging(true);
+    downPosition.current = { x: e.clientX, y: e.clientY };
+  }, []);
 
-      const handleMouseMove = useCallback((e: MouseEvent) => {
-        if (!isDragging) return;
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!isDragging) return;
 
-        const deltaX = e.clientX - downPosition.current.x;
-        const deltaY = e.clientY - downPosition.current.y;
+    const deltaX = e.clientX - downPosition.current.x;
+    const deltaY = e.clientY - downPosition.current.y;
 
-        const rect = elementRef.current?.getBoundingClientRect();
-        const elementWidth = rect?.width || 0;
-        const elementHeight = rect?.height || 0;
+    const rect = elementRef.current?.getBoundingClientRect();
+    const elementWidth = rect?.width || 0;
+    const elementHeight = rect?.height || 0;
 
-        const leftBound = bounds?.left ?? 0;
-        const topBound = bounds?.top ?? 0;
-        const rightBound = bounds?.right !== undefined 
-          ? bounds.right - elementWidth 
-          : window.innerWidth - elementWidth;
-        const bottomBound = bounds?.bottom !== undefined 
-          ? bounds.bottom - elementHeight 
-          : window.innerHeight - elementHeight;
+    const leftBound = bounds?.left ?? 0;
+    const topBound = bounds?.top ?? 0;
+    const rightBound = bounds?.right !== undefined 
+      ? bounds.right - elementWidth 
+      : window.innerWidth - elementWidth;
+    const bottomBound = bounds?.bottom !== undefined 
+      ? bounds.bottom - elementHeight 
+      : window.innerHeight - elementHeight;
 
-        const newX = Math.max(leftBound, Math.min(rightBound, upPosition.current.x + deltaX));
-        const newY = Math.max(topBound, Math.min(bottomBound, upPosition.current.y + deltaY));
+    const newX = Math.max(leftBound, Math.min(rightBound, upPosition.current.x + deltaX));
+    const newY = Math.max(topBound, Math.min(bottomBound, upPosition.current.y + deltaY));
 
-        cancelAnimationFrame(animationFrame);
-        animationFrame = requestAnimationFrame(() => {
-          setPosition({ x: newX, y: newY });
-        });
-      }, [isDragging, bounds]);
+    cancelAnimationFrame(animationFrame);
+    animationFrame = requestAnimationFrame(() => {
+      setPosition({ x: newX, y: newY });
+    });
+  }, [isDragging, bounds]);
 
-      const handleMouseUp = useCallback(() => {
-        cancelAnimationFrame(animationFrame);
-        setIsDragging(false);
-        upPosition.current = { ...position };
-      }, [position]);
+  const handleMouseUp = useCallback(() => {
+    cancelAnimationFrame(animationFrame);
+    setIsDragging(false);
+    upPosition.current = { ...position };
+  }, [position]);
 
-      useEffect(() => {
-        if (isDragging) {
-          window.addEventListener('mousemove', handleMouseMove);
-          window.addEventListener('mouseup', handleMouseUp);
-        } else {
-          window.removeEventListener('mousemove', handleMouseMove);
-          window.removeEventListener('mouseup', handleMouseUp);
-        }
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    } else {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    }
 
-        return () => {
-          window.removeEventListener('mousemove', handleMouseMove);
-          window.removeEventListener('mouseup', handleMouseUp);
-        };
-      }, [isDragging, handleMouseMove, handleMouseUp]);
-
-      return (
-        <div
-          ref={elementRef}
-          className="react-draggable"
-          onMouseDown={handleMouseDown}
-          style={{
-            transform: `translate(${position.x}px, ${position.y}px)`,
-            cursor: isDragging ? 'grabbing' : 'grab',
-          }}
-        >
-          {children}
-        </div>
-      );
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
     };
+  }, [isDragging, handleMouseMove, handleMouseUp]);
 
-    export default Draggable;
+  return (
+    <div
+      ref={elementRef}
+      className="react-draggable"
+      onMouseDown={handleMouseDown}
+      style={{
+        transform: `translate(${position.x}px, ${position.y}px)`,
+        cursor: isDragging ? 'grabbing' : 'grab',
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
+export default Draggable;
+```
 
 ## 总结与扩展
 
