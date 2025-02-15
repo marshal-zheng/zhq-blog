@@ -243,51 +243,53 @@ export default Draggable;
 
 好，让我们将上面的推演落实到代码实现。通过 `position`、`downPosition` 和 `upPosition` 的协作，来让元素动起来。
 
-    import React, { useState } from 'react';
+```js
+import React, { useState } from 'react';
 
-    const Draggable = ({ children }: { children: React.ReactNode }) => {
-      const [isDragging, setIsDragging] = useState(false);
-      const [position, setPosition] = useState({ x: 0, y: 0 });
-      const [downPosition, setDownPosition] = useState({ x: 0, y: 0 });
-      const [upPosition, setUpPosition] = useState({ x: 0, y: 0 });
+const Draggable = ({ children }: { children: React.ReactNode }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [downPosition, setDownPosition] = useState({ x: 0, y: 0 });
+  const [upPosition, setUpPosition] = useState({ x: 0, y: 0 });
 
-      const handleMouseDown = (e: React.MouseEvent) => {
-        setIsDragging(true);
-        setDownPosition({
-          x: e.clientX,
-          y: e.clientY,
-        });
-      };
+  const handleMouseDown = (e: React.MouseEvent) => {
+    setIsDragging(true);
+    setDownPosition({
+      x: e.clientX,
+      y: e.clientY,
+    });
+  };
 
-      const handleMouseMove = (e: React.MouseEvent) => {
-        if (!isDragging) return;
-        const deltaX = e.clientX - downPosition.x;
-        const deltaY = e.clientY - downPosition.y;
-        setPosition({
-          x: upPosition.x + deltaX,
-          y: upPosition.y + deltaY,
-        });
-      };
-      const handleMouseUp = (e: React.MouseEvent) => {
-        setIsDragging(false);
-        setUpPosition({ x: position.x, y: position.y });
-      };
-      return (
-        <div
-          className="react-draggable"
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          style={{
-            transform: `translate(${position.x}px, ${position.y}px)`,
-          }}
-        >
-          {children}
-        </div>
-      );
-    };
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging) return;
+    const deltaX = e.clientX - downPosition.x;
+    const deltaY = e.clientY - downPosition.y;
+    setPosition({
+      x: upPosition.x + deltaX,
+      y: upPosition.y + deltaY,
+    });
+  };
+  const handleMouseUp = (e: React.MouseEvent) => {
+    setIsDragging(false);
+    setUpPosition({ x: position.x, y: position.y });
+  };
+  return (
+    <div
+      className="react-draggable"
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      style={{
+        transform: `translate(${position.x}px, ${position.y}px)`,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
 
-    export default Draggable;
+export default Draggable;
+```
 
 > 我们可以把拖拽看作一场接力赛，每一次拖拽就像完成了一棒，`upPosition` 就是交接棒的位置（上一次拖拽的结束点），而 `downPosition` 是这一棒的起始点。在拖拽过程中，偏移量（`deltaX` 和 `deltaY`）就像这一棒跑出的距离。每次拖拽的位置（`position`）是由上一次的结果（`upPosition`）加上这一棒的距离（`deltaX` 和 `deltaY`）得来的。
 
