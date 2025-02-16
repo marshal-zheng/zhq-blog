@@ -6,6 +6,7 @@ featured: true
 slug: 'copilot-cli'
 tags:
   - 'AI'
+  - 'Copilot'
 description: 'GitHub Copilot CLI 深度体验：从安装配置到实践应用，探索如何让 AI 助手简化你的命令行操作。'
 ---
 
