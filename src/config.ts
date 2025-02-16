@@ -4,8 +4,7 @@ import { t } from "i18next"
 export const SITE: Site = {
   website: "https://marsio.top", // replace this with your deployed domain
   author: "ZHQ",
-  profile: "https://satnaing.dev/",
-  desc: "A minimal, responsive and SEO-friendly Astro blog theme.",
+  desc: "探索技术之美，分享开发心得. ZHQ的个人技术博客",
   title: "ZHQ的博客",
   ogImage: "",
   lightAndDarkMode: true,
