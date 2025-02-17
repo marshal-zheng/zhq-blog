@@ -7,10 +7,10 @@ slut: 'copilot-best-practices'
 tags:
   - 'AI'
   - 'Copilot'
-description: '分享 GitHub Copilot 的使用技巧和最佳实践，帮助你更好地利用这款 AI 编程助手，提升开发效率。'
+description: '分享 GitHub Copilot 的使用技巧和最佳实践，以提升开发效率。'
 ---
 
-最近在使用 Copilot 的过程中，逐渐摸索出一些使用技巧。今天就来分享下如何更好地使用这款 AI 编程助手。
+使用Copilot 的过程中，逐渐摸索出一些使用技巧。今天就来记录下如何更好地使用这款 AI 编程助手。
 
 ## Copilot 的优势与局限
 
@@ -163,11 +163,15 @@ const users = [
    - 对 Chat 回答点赞/踩
    - 在讨论区提供反馈
 
+这些关键词可以在 IDE 中使用，以便快速获得所需的帮助和建议。
+
 ## 总结
 
 合理使用 Copilot 能显著提升开发效率，但要记住：
 - 它是助手而非替代品
 - 代码质量由开发者负责
-- 持续学习和积累才是关键
+- 持续学习和积累是关键
 
 > **小贴士**：定期关注 [GitHub Changelog](https://github.blog/changelog/) 了解新功能，及时优化使用方式。 
+
+<span class="text-red-500 font-bold">下一篇介绍下copilot中的@ # /的区别与用法.</span>
