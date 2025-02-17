@@ -19,7 +19,7 @@ export default function Card({ href, frontmatter, secHeading = true }: Props) {
   return (
     <li className="my-6">
       <a
-        href={`${href}/`}
+        href={href?.endsWith('/') ? href : `${href}/`}
         className="inline-block text-lg font-medium text-skin-accent decoration-dashed underline-offset-4 focus-visible:no-underline focus-visible:underline-offset-0"
       >
         {secHeading ? (
