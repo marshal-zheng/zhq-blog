@@ -1,0 +1,54 @@
+{
+  "rules": [
+    {
+      "trigger": "write blog",
+      "action": "创建博客文章，遵循以下规范：
+        1. 文件位置：src/content/blog/
+        2. 文件格式：markdown
+        3. frontmatter必须包含：
+           - author: ZHQ
+           - pubDatetime: 当前时间
+           - title: 文章标题
+           - featured: 是否精选
+           - tags: 文章标签
+           - description: 文章描述
+        4. 正文结构：
+           - 开头简短介绍背景
+           - 使用二级标题(##)组织文章结构
+           - 适当使用列表、引用等 markdown 元素
+           - 重要内容使用加粗或高亮
+           - 结尾总结或展望
+        5. 写作风格：
+           - 使用中文书写
+           - 口语化表达，像聊天一样
+           - 适当使用表情符号增加趣味性
+           - 技术内容要准确且易懂
+        6. 代码展示：
+           - 使用 ```language 标注语言
+           - 关键代码要有注释
+           - 复杂逻辑要分步骤解释"
+    },
+    {
+      "trigger": "edit blog",
+      "action": "编辑现有博客文章时：
+        1. 保持原有frontmatter格式
+        2. 更新modDatetime为当前时间
+        3. 保持中文写作风格
+        4. 确保图片路径正确
+        5. 保持文章结构的一致性
+        6. 确保新旧内容过渡自然"
+    },
+    {
+      "trigger": "write component",
+      "action": "使用React函数式组件，遵循TypeScript类型定义，采用Hooks管理状态"
+    },
+    {
+      "trigger": "write styles",
+      "action": "使用Tailwind CSS类，遵循项目现有样式规范"
+    },
+    {
+      "trigger": "write test",
+      "action": "使用Jest和React Testing Library编写测试用例"
+    }
+  ]
+} 

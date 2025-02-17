@@ -1,0 +1,34 @@
+# Build output
+dist/
+.output/
+.astro/
+
+# Dependencies
+node_modules/
+
+# Cache
+.cache/
+
+# Environment variables
+.env
+.env.*
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories
+.idea/
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Font files
+public/fonts/
+
+# Generated files
+src/content/config.ts 
