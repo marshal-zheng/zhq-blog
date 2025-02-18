@@ -45,5 +45,7 @@
   "discordInfo": "ZHQ's Discord",
   "facebookInfo": "ZHQ's Facebook",
   "xInfo": "ZHQ`s X",
-  "tableOfContents": "Table of contents"
+  "tableOfContents": "Table of contents",
+  "notFound": "Page Not Found",
+  "goBackHome": "Go Back Home"
 }

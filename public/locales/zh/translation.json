@@ -45,5 +45,7 @@
   "discordInfo": "ZHQ的Discord",
   "facebookInfo": "ZHQ的Facebook",
   "xInfo": "ZHQ的X",
-  "tableOfContents": "文章目录"
+  "tableOfContents": "文章目录",
+  "notFound": "页面未找到",
+  "goBackHome": "返回首页"
 }

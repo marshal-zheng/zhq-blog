@@ -4,6 +4,7 @@ import Layout from "@layouts/Layout.astro";
 import Header from "@components/Header.astro";
 import Footer from "@components/Footer.astro";
 import LinkButton from "@components/LinkButton.astro";
+import { t } from "i18next"
 ---
 
 <Layout title={`404 Not Found | ${SITE.title}`}>
@@ -13,12 +14,12 @@ import LinkButton from "@components/LinkButton.astro";
     <div class="not-found-wrapper">
       <h1>404</h1>
       <span aria-hidden="true">¯\_(ツ)_/¯</span>
-      <p>Page Not Found</p>
+      <p>{t('notFound')}</p>
       <LinkButton
         href="/"
         className="my-6 text-lg underline decoration-dashed underline-offset-8"
       >
-        Go back home
+        {t('goBackHome')}
       </LinkButton>
     </div>
   </main>
