@@ -21,6 +21,147 @@ description: 'GitHub Copilot Extensions 开发中常见的术语和概念记录�
 
 > 感觉像是一个智能的中间人，主要负责接收、理解用户需求，并返回合适的响应。
 
+## 扩展工作原理
+
+### 基本架构
+```javascript
+// Copilot Extensions 的基本架构
+const extensionArchitecture = {
+    components: {
+        agent: '处理用户请求的 AI 助手',
+        githubApp: '提供身份验证和权限管理',
+        chatInterface: '用户交互界面',
+        apiEndpoints: '处理请求的服务端接口'
+    },
+    workflow: [
+        '用户在 Chat 中发送请求',
+        'Agent 接收并处理请求',
+        '调用相应的外部服务',
+        '返回处理结果给用户'
+    ]
+};
+```
+
+### 请求处理流程
+
+1. **初始化阶段**
+```javascript
+// 创建一个新的 Agent
+const myAgent = new Agent({
+    name: 'MyCustomAgent',
+    description: '处理特定领域的请求',
+    systemPrompt: `你是一个专门处理 X 领域请求的助手...`,
+    
+    // 定义处理方法
+    async handleChat(context) {
+        // 1. 解析用户请求
+        const { message, codeContext } = context;
+        
+        // 2. 处理请求
+        const result = await processRequest(message);
+        
+        // 3. 返回响应
+        return formatResponse(result);
+    }
+});
+```
+
+2. **请求处理阶段**
+```javascript
+// 处理用户请求的具体实现
+async function processRequest(message) {
+    try {
+        // 1. 验证请求
+        validateRequest(message);
+        
+        // 2. 调用外部服务
+        const serviceResponse = await callExternalService(message);
+        
+        // 3. 处理响应
+        return transformResponse(serviceResponse);
+        
+    } catch (error) {
+        handleError(error);
+    }
+}
+```
+
+3. **响应生成阶段**
+```javascript
+// 格式化响应
+function formatResponse(result) {
+    return {
+        type: 'markdown',
+        value: `处理结果：\n${result}`,
+        metadata: {
+            source: 'custom-agent',
+            timestamp: new Date().toISOString()
+        }
+    };
+}
+```
+
+### 关键特性
+
+1. **上下文管理**
+```javascript
+// 管理对话上下文
+class ConversationContext {
+    constructor() {
+        this.history = [];
+        this.metadata = new Map();
+    }
+    
+    addMessage(message) {
+        this.history.push({
+            content: message,
+            timestamp: Date.now()
+        });
+    }
+    
+    getContext() {
+        return {
+            history: this.history,
+            metadata: Object.fromEntries(this.metadata)
+        };
+    }
+}
+```
+
+2. **错误处理**
+```javascript
+// 统一的错误处理
+function handleError(error) {
+    return {
+        type: 'error',
+        message: error.message,
+        suggestions: [
+            '检查输入参数',
+            '验证服务状态',
+            '查看错误日志'
+        ]
+    };
+}
+```
+
+3. **安全控制**
+```javascript
+// 安全检查实现
+const securityChecks = {
+    validateInput(input) {
+        // 输入验证
+        return sanitizeInput(input);
+    },
+    checkPermissions(user, resource) {
+        // 权限检查
+        return hasPermission(user, resource);
+    },
+    auditLog(action) {
+        // 审计日志
+        logAction(action);
+    }
+};
+```
 
 ### Copilot Extension（扩展）
 - 一个特殊的 GitHub App
