@@ -8,7 +8,6 @@ description: '介绍如何使用 GitHub Copilot Chat 快速生成高质量的单
 tags:
   - 'AI'
   - 'Copilot'
-  - 'Testing'
 ---
 
 单元测试对于保证代码质量至关重要，但编写测试用例往往比较耗时。今天来分享下如何使用 Copilot Chat 快速生成单元测试。
