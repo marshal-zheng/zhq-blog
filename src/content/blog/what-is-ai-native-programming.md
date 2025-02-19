@@ -67,7 +67,7 @@ AI-Native的最大优势在于提升“自驱力”！
 
 **AI-Native开发（AI-Native Development）**，是指利用 AI **辅助编程**、**提升开发效率**的一种方法。
 
-💡 例如，你想编写一个 JS 函数来验证手机格式：
+💡 例如，这里写一个 JS 函数来验证手机格式：
 
 ![Validate Phone Number using AI](@assets/images/validate-phone.gif)
 
@@ -108,7 +108,7 @@ AI-Native的最大优势在于提升“自驱力”！
 - **与 GitHub Copilot 兼容性最佳**
 
 ### 3️⃣ 代码补全工具（Code Completion Enhancements）
-💡 让 AI 替你补全代码。
+💡 让 AI 智能补全代码。
 - **GitHub Copilot（付费，推荐）**
 - **Amazon CodeWhisperer（免费，但效果一般）**
 
@@ -135,15 +135,16 @@ AI 仍然无法像人类一样，先拆解复杂需求，再自主编写完整�
 
 ---
 
-## 🔮 AI-Native 开发的未来
+## 🔮 AI-Native 开发的明天
 
 未来，可能会出现 **AI-Native Framework**，即为 AI 设计的开发框架，让 AI 编程变得更高效！
 
 目前的主流框架（如 **FastAPI、Next.js、Flutter React Vue Angular**）是为人类开发者优化的，未来可能会出现**更适合 AI 的框架**，帮助 AI 生成更好的代码。
 
 📌 总结：
+
 ✅ **AI-Native 开发是趋势，不可忽视**
 
-✅ **成为 AI-Native 开发者，让你的编程效率指数级提升**
+✅ **成为 AI-Native 开发者，编程效率指数级提升**
 
 ✅ **拥抱 AI，提升自我竞争力，未来可期！**
