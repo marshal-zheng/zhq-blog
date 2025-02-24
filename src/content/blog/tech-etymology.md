@@ -19,7 +19,7 @@ description: '探索计算机领域中常见术语的词源和历史由来,了�
 > First actual case of bug being found.
 >并把这只飞蛾贴在了日志本上。从此,"bug" 就成为了表示程序错误的专业术语。
 
-# Copilot (副驾驶)
+## Copilot (副驾驶)
 
 > "Copilot" 源自飞行员术语:
 > - 意思是"副驾驶"
