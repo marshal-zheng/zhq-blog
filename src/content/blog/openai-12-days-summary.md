@@ -6,7 +6,6 @@ featured: false
 slut: 'openai-12-days'
 tags:
   - 'AI'
-  - 'OpenAI'
   - 'ChatGPT'
 description: '总结 OpenAI 在 2024 年 12 月的 12 天连续发布中的重要更新,包括新模型、新功能和重要改进。'
 ---
