@@ -176,4 +176,32 @@ description: '探索计算机领域中常见术语的词源和历史由来,了�
 > - 需要特定操作才能触发
 > - 最早出现在 Atari 游戏中
 
+## Workspaces (工作区)
+
+> "Workspaces" 源自建筑术语:
+> - 最初指建筑工地
+> - 后来引申为软件开发中的工作环境
+> - 现在用来表示多项目管理
+
+## CLI (命令行界面)
+
+> "CLI" 是 "Command Line Interface" 的缩写:
+> - 最早出现在 1960 年代的 Unix 系统
+> - 让用户通过命令行与计算机交互
+> - 现在已成为软件开发的标准界面
+
+## API (应用程序接口)
+
+> "API" 是 "Application Programming Interface" 的缩写:
+> - 最早出现在 1960 年代的 Unix 系统
+> - 让用户通过命令行与计算机交互
+> - 现在已成为软件开发的标准界面
+
+## SDK (软件开发工具包)
+
+> "SDK" 是 "Software Development Kit" 的缩写:
+> - 最早出现在 1960 年代的 Unix 系统
+> - 让用户通过命令行与计算机交互
+> - 现在已成为软件开发的标准界面
+
 <span class="text-red-500 font-bold">持续更新中...</span> 
