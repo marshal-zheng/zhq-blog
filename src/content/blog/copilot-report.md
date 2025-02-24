@@ -7,7 +7,7 @@ draft: false
 tags:
   - 'AI'
   - 'Copilot'
-description: '从 Github Copilot 用户转向 Cursor 的深度体验分享，详细对比两款AI编程助手的功能特点、价格方案和实际使用感受。'
+description: '本报告详细探讨了GitHub Copilot在前后端项目中的应用效果，评估其在代码生成、注释生成、Bug检测与测试用例生成等方面的可行性。'
 ---
 
 ## AI辅助编程可行性研究报告

@@ -7,7 +7,7 @@ draft: false
 tags:
   - 'AI'
   - 'Cursor'
-description: '从 Github Copilot 用户转向 Cursor 的深度体验分享，详细对比两款AI编程助手的功能特点、价格方案和实际使用感受。'
+description: '初步解析 Cursor 的使用体验，分享其在实际编程中的优势与不足，帮助你更好地了解这款 AI 编程助手。'
 ---
 
 # 使用体验分享：Cursor——AI 编程助手的真实感受
