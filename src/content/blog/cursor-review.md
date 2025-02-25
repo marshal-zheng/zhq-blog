@@ -2,7 +2,7 @@
 author: ZHQ
 pubDatetime: 2024-04-15T20:59:34.000+08:00
 title: '从Copilot到Cursor：我的AI编程助手切换体验'
-featured: true
+featured: false
 draft: false
 tags:
   - 'AI'

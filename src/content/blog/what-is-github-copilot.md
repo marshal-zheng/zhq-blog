@@ -2,7 +2,7 @@
 author: ZHQ
 pubDatetime: 2023-05-2T10:30:34.000+08:00
 title: '初识GitHub Copilot'
-featured: true
+featured: false
 slut: 'copilot-first'
 tags:
   - 'AI'

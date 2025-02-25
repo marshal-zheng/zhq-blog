@@ -2,7 +2,7 @@
 author: ZHQ
 pubDatetime: 2024-02-15T19:20:52.000+08:00
 title: 'GitHub Copilot CLI: NLP AI 终端助手'
-featured: true
+featured: false
 slug: 'copilot-cli'
 tags:
   - 'AI'
