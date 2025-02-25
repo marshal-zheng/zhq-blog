@@ -3,7 +3,7 @@ author: ZHQ
 pubDatetime: 2023-11-05T20:30:34.000+08:00
 modDatetime: 2025-02-24T18:30:34.000+08:00
 title: '计算机领域词源考古'
-featured: true
+featured: false
 draft: false
 tags:
   - 'Etymology'
@@ -19,48 +19,13 @@ description: '探索计算机领域中常见术语的词源和历史由来,了�
 > First actual case of bug being found.
 >并把这只飞蛾贴在了日志本上。从此,"bug" 就成为了表示程序错误的专业术语。
 
-## Copilot (副驾驶)
+## Pixel (像素)
 
-> "Copilot" 源自飞行员术语:
-> - 意思是"副驾驶"
-> - 最初指飞行员助手
-> - 在计算机中指自动编程助手
-
-## Transformer (变压器)
-
-> "Transformer" 源自物理学:
-> - 意思是"变压器"
-> - 最初指变压器
-> - 在计算机中指神经网络模型
-
-## Prompt (提示)
-
-> "Prompt" 源自心理学:
-> - 意思是"提示"
-> - 最初指心理咨询师提示患者
-> - 在计算机中指自动编程助手
-
-## LLM (大语言模型)
-
-> "LLM" 是 "Large Language Model" 的缩写:
-> - 意思是"大语言模型"
-> - 最初指大型语言模型
-> - 在计算机中指自动编程助手
-
-## Agent (代理)
-
-> "Agent" 源自英语 "agent":
-> - 意思是"代理人"
-> - 最初指代理人
-> - 在计算机中指自动编程助手
-
-## Robot (机器人)
-
-> "Robot" 一词最早出现在捷克作家 Karel Čapek 1920 年的科幻剧本《罗素姆的万能机器人》(R.U.R.)中。在捷克语中:
-> - robota = 强制劳动
-> - robotnik = 农奴
->
-> 这个词后来被英语借用,用来表示能够自动执行任务的机器。
+> "Pixel" 是 "Picture Element" 的缩写:
+> - 最早由 Fred C. Billingsley 在1965年提出
+> - Picture = 图片
+> - Element = 元素
+> 现在已成为数字图像中最小的显示单位
 
 ## Spam (垃圾信息)
 
@@ -81,14 +46,6 @@ description: '探索计算机领域中常见术语的词源和历史由来,了�
 ## Archive (存档)
 
 > 来自希腊语 "archeion",原意是 "政府大楼"。因为重要文件都保存在政府大楼中,所以这个词逐渐引申为 "档案" 的含义。
-
-## Pixel (像素)
-
-> "Pixel" 是 "Picture Element" 的缩写:
-> - 最早由 Fred C. Billingsley 在1965年提出
-> - Picture = 图片
-> - Element = 元素
-> 现在已成为数字图像中最小的显示单位
 
 ## Wiki (维基)
 
