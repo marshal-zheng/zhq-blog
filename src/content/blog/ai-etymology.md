@@ -1,7 +1,7 @@
 ---
 author: ZHQ
 pubDatetime: 2024-02-24T19:40:34.000+08:00
-modDatetime: 2025-02-25T8:40:34.000+08:00
+modDatetime: 2025-03-06T05:17:00.000+08:00
 title: 'AI领域词源考古'
 featured: true
 draft: false
@@ -19,6 +19,21 @@ description: '探索人工智能领域中常见术语的词源和历史由来,�
 > - Artificial = 人造的、人工的
 > - Intelligence = 智能
 > - 强调是由人类创造的智能系统
+
+## Ollama (骆驼)
+
+> "Ollama" 这个名字来源很有趣:
+> - 是 "llama" (骆驼) 的变体
+> - llama 来自 Meta 的 LLaMA 模型
+> - 加上了 "O" 前缀使其更朗朗上口
+> - 暗示了它是一个轻量级的 LLM 运行工具
+> - Logo 也是一只可爱的骆驼头像
+
+有骆驼这个形象很贴切:
+- 骆驼能够在资源匮乏的环境中生存
+- Ollama 同样能在本地环境高效运行大模型
+- 都具有适应性强、负重能力强的特点
+
 
 ## Copilot (副驾驶)
 
