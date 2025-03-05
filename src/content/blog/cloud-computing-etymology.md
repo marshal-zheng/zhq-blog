@@ -5,9 +5,8 @@ title: '云计算领域词源考古'
 featured: false
 draft: false
 tags:
-  - 云计算
-  - 技术史
-  - 词源学
+  - Etymology
+  - Cloud
 description: 探索"云计算"一词的起源与演变，揭秘云计算技术概念是如何得名的。
 ---
 
