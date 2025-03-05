@@ -1,7 +1,7 @@
 ---
 author: ZHQ
 pubDatetime: 2024-02-24T19:40:34.000+08:00
-modDatetime: 2025-03-06T05:17:00.000+08:00
+modDatetime: 2025-03-05T05:17:00.000+08:00
 title: 'AI领域词源考古'
 featured: true
 draft: false
