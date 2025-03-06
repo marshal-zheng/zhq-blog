@@ -1,6 +1,6 @@
 ---
 author: ZHQ
-pubDatetime: 2024-04-15T11:30:00Z
+pubDatetime: 2024-01-16T19:01:00Z
 title: 'Git技巧：如何通过commit message模糊查询commit ID'
 featured: false
 draft: false
