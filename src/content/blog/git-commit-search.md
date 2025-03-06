@@ -39,14 +39,14 @@ git log --grep="fix bug" -i
 
 ### 2. 使用git log -S
 
-如果要搜索代码变更内容，可以使用`-S`选项：
+有时候你可能只记得修改了某个功能的关键字(如你只记得添加了validatePhone这个方法名)，可以使用`-S`选项：
 
 ```bash
 # 搜索添加或删除了特定字符串的提交
 git log -S "搜索关键词"
 
 # 示例：查找涉及到某个函数的修改
-git log -S "function getName"
+git log -S "validatePhone"
 ```
 
 ### 3. 格式化输出
