@@ -5,7 +5,6 @@ title: 'Pass云平台集成前端E2E测试实践'
 featured: false
 draft: false
 tags:
-  - 'E2E'
   - 'Testing'
   - 'CI/CD'
 description: '详细介绍如何在Pass云平台中集成前端端到端(E2E)测试，提高代码质量和自动化测试效率。'

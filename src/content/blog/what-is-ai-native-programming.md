@@ -6,7 +6,6 @@ featured: true
 draft: false
 tags:
   - 'AI'
-  - 'AI-Native'
 category: 'AI开发'
 description: '探讨 AI-Native 开发理念,了解如何成为 AI 时代的原生开发者。从效率提升、成长速度和独立性等维度,分析 AI-Native 工程师的特点及优势。'
 ---
