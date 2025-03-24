@@ -66,4 +66,10 @@ git log --since="yesterday"
 git log -p -n 10
 ```
 
+#### 设置本地分支的上游(跟踪)分支
+
+```bash
+git branch --set-upstream-to=origin/8.5.x
+```
+
 
