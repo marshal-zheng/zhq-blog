@@ -6,6 +6,7 @@ featured: false
 draft: false
 tags:
   - mac
+  - '高效开发'
 description: '常用mac命令。'
 ---
 

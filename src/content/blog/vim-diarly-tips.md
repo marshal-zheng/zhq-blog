@@ -5,7 +5,7 @@ title: 'Vim常用命令速查'
 featured: false
 tags:
   - 'Vim'
-  - 'Cursor'
+  - '高效开发'
 description: '常用Vim命令速查手册，提升编码效率的实用指南。'
 ---
 

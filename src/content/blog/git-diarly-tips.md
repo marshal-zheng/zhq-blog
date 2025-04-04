@@ -6,9 +6,15 @@ featured: false
 draft: false
 tags:
   - Git
+  - '高效开发'
 description: '记录日常开发中git常用命令。'
 ---
 
+#### 克隆项目自定义项目名称
+
+```bash
+git clone <repo-url> <custom-folder-name>
+```
 
 #### 根据提交信息关键词搜索
 
@@ -20,6 +26,12 @@ git log --grep="关键词"
 
 ```bash
 git log --author="作者姓名"
+```
+
+#### 删除远程分支
+
+```bash
+git push origin --delete branch-name
 ```
 
 #### 结合关键词和作者搜索
@@ -71,5 +83,22 @@ git log -p -n 10
 ```bash
 git branch --set-upstream-to=origin/8.5.x
 ```
+
+#### 查找两个分支的共同祖先
+
+```bash
+git merge-base branch1 branch2
+```
+
+#### 从两个分支的共同祖先开始，cherry-pick origin/branchName 分支的后续提交
+
+```bash
+git cherry-pick commitId..origin/dev
+```
+
+
+
+
+
 
 
