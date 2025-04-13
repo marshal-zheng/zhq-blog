@@ -199,4 +199,26 @@ description: '探索人工智能领域中常见术语的词源和历史由来,�
 > - 在 AI 中指基础版本的算法
 > - 没有特殊改进的标准实现
 
+## Augmentation (数据增强)
+
+> "Augmentation" 源自拉丁语 "augmentare"(增加):
+> - Aug = 增加
+> - Ment = 行为或结果
+> - 在 AI 中指扩充训练数据的技术
+> - 通过变换生成更多样本
+
+## GPT (生成式预训练转换器)
+
+> "GPT" 是 "Generative Pre-trained Transformer" 的缩写:
+> - Generative = 生成式的
+> - Pre-trained = 预训练的
+> - Transformer = 变换器架构
+> - 强调其生成能力和预训练特性
+
+这个名字反映了几个关键特点:
+- 基于 Transformer 架构设计
+- 采用大规模预训练方法
+- 具有强大的文本生成能力
+- 可以适应多种下游任务
+
 <span class="text-red-500 font-bold">持续更新中...</span> 

@@ -96,6 +96,48 @@ git merge-base branch1 branch2
 git cherry-pick commitId..origin/dev
 ```
 
+#### 查看所有包含8.4的tag
+
+```bash
+git tag | grep 8.4
+```
+
+#### 本地分支中包含 8.2.x 的
+
+```bash
+git branch | grep 8.2.x
+```
+
+#### 查看所有分支（本地 + 远程）中包含 8.2.x 的
+
+```bash
+git branch -a | grep 8.2.x的分支
+```
+
+#### 只查看远程分支包含8.2.x的分支
+
+```bash
+git branch -r | grep 8.2.x
+```
+
+#### 远程分支 origin/8.2.x 创建一个本地分支 8.2.x，并自动切换到它
+
+```bash
+git checkout -b 8.2.x origin/8.2.x
+```
+
+#### 将另一个分支的单个文件 checkout 到当前分支
+
+```bash
+git checkout target-branch -- src/utils/helper.js
+```
+
+#### 将其他分支的文件 checkout 到当前目录的自定义路径
+
+```bash
+git show other-branch:path/to/file > your-target-path/filename
+```
+
 
 
 
