@@ -132,10 +132,16 @@ git checkout -b 8.2.x origin/8.2.x
 git checkout target-branch -- src/utils/helper.js
 ```
 
-#### 将其他分支的文件 checkout 到当前目录的自定义路径
+#### 本地分支模糊查找
 
 ```bash
-git show other-branch:path/to/file > your-target-path/filename
+git branch | grep 'patch'
+```
+
+#### 远程分支模糊查找
+
+```bash
+git branch -r | grep 'patch'
 ```
 
 
