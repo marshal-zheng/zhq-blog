@@ -144,6 +144,36 @@ git branch | grep 'patch'
 git branch -r | grep 'patch'
 ```
 
+#### 查找所有远程分支中有提交含 “编辑配置” 的分支
+
+```bash
+for branch in $(git branch -r | grep -v '\->'); do
+  if git log "$branch" --grep='编辑配置' -i --oneline | grep -q .; then
+    echo "$branch"
+  fi
+done
+```
+
+#### 查找所有远程分支中有提交含 “编辑配置” 的分支
+
+```bash
+for branch in $(git branch | sed 's/..//'); do
+  if git log "$branch" --grep='编辑配置' -i --oneline | grep -q .; then
+    echo "$branch"
+  fi
+done
+```
+
+#### 查找所有远程分支中有提交含 “编辑配置” 的分支
+
+```bash
+for branch in $(git for-each-ref --format='%(refname:short)' refs/heads/ refs/remotes/); do
+  if git log "$branch" --grep='编辑配置' -i --oneline | grep -q .; then
+    echo "$branch"
+  fi
+done
+```
+
 
 
 
