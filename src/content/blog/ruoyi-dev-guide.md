@@ -9,8 +9,6 @@ tags:
 description: '本文提供了一套基于 RuoYi-Vue 进行二次开发的策略指南，旨在帮助开发者在扩展业务功能的同时，能够轻松、低成本地同步官方更新，涵盖项目准备、Git 管理、开发实践及同步方法。'
 ---
 
-![RuoYi-Vue 系统图](https://cdn.jsdelivr.net/gh/marshal-zheng/images-hosting@main/images/PK1Fm2.jpg)
-
 ## 项目概述
 
 在国内开源领域，RuoYi-Vue 无疑是一款 **现象级** 的 Java 企业级快速开发脚手架。它并 **不仅仅是一个简单的后台管理系统模板**，而是凭借其 **开箱即用的丰富功能**（精细到按钮级别的权限控制、强大的代码生成器、完善的系统监控、定时任务等）、**主流且成熟的技术栈选型**（后端 Spring Boot、MyBatis、Sa-Token/Spring Security，前端 Vue2/Vue3、Element UI/Plus）以及 **清晰的前后端分离与后端多模块化架构**，迅速成为众多企业信息化建设、外包项目交付或个人开发者学习实践的 **优选基石**。
