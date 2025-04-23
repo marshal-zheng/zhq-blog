@@ -1,6 +1,6 @@
 ---
 author: ZHQ
-pubDatetime: 2025-03-16T22:21:00.000+08:00
+pubDatetime: 2025-03-26T22:21:00.000+08:00
 title: 'RuoYi-Vue 二次开发与官方同步策略'
 featured: true
 draft: false
