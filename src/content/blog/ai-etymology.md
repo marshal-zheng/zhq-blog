@@ -221,5 +221,20 @@ description: '探索人工智能领域中常见术语的词源和历史由来,�
 - 具有强大的文本生成能力
 - 可以适应多种下游任务
 
+## Feature Engineering (特征工程)
+
+> "Feature Engineering" 源于工程学与数据科学:
+> - Feature = 特征、特性
+> - Engineering = 工程、设计过程
+> - 指人工设计和选择模型的输入特征
+
+## RAG (检索增强生成)
+
+> "RAG" 是 "Retrieval-Augmented Generation" 的缩写:
+> - Retrieval = 检索
+> - Augmented = 增强的
+> - Generation = 生成
+> - 结合检索系统和生成模型的技术
+
 
 <span class="text-red-500 font-bold">持续更新中...</span> 

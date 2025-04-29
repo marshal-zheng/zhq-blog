@@ -59,3 +59,7 @@ pip freeze > requirements.txt
 ```bash
 pip install -r requirements.txt
 ```
+#### 查看是否安装了某个依赖包
+```bash
+python -c "import sentence_transformers; print('已安装 sentence-transformers')"
+```

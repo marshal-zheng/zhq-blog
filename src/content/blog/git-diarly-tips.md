@@ -163,15 +163,24 @@ for branch in $(git branch | sed 's/..//'); do
   fi
 done
 ```
+> git ls-tree -r --name-only <branch>：列出分支上所有文件名。
+> grep -q "EditSchedulePolicy.vue"：检查是否包含指定文件。
+> 找到后打印分支名。
 
-#### 查找所有远程分支中有提交含 “编辑配置” 的分支
+#### 查看哪个分支包含 EditSchedulePolicy.vue 文件
 
 ```bash
-for branch in $(git for-each-ref --format='%(refname:short)' refs/heads/ refs/remotes/); do
-  if git log "$branch" --grep='编辑配置' -i --oneline | grep -q .; then
+for branch in $(git branch -r | grep -v '\->'); do
+  if git ls-tree -r --name-only "$branch" | grep -q "EditSchedulePolicy.vue"; then
     echo "$branch"
   fi
 done
+```
+
+#### git 检查提交信息是否包含指定内容
+
+```bash
+git log --oneline | grep -q "更新 node pnpm 依赖版本，避免前端编译报" && echo "✅ 找到了" || echo "❌ 没找到"
 ```
 
 
