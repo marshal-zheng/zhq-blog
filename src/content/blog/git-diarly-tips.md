@@ -183,6 +183,12 @@ done
 git log --oneline | grep -q "更新 node pnpm 依赖版本，避免前端编译报" && echo "✅ 找到了" || echo "❌ 没找到"
 ```
 
+#### git stash 单个文件
+
+```bash
+git stash push -m "stash message" path/to/your/file
+```
+
 
 
 
