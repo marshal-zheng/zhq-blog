@@ -236,5 +236,30 @@ description: '探索人工智能领域中常见术语的词源和历史由来,�
 > - Generation = 生成
 > - 结合检索系统和生成模型的技术
 
+## SFT (监督微调)
+
+> "SFT" 是 "Supervised Fine-Tuning" 的缩写:
+> - Supervised = 监督的
+> - Fine-Tuning = 微调
+> - 指在有标注数据下对预训练模型进行微调
+> - 使模型更好地适应特定任务或领域
+
+## RLHF (人类反馈强化学习)
+
+> "RLHF" 是 "Reinforcement Learning from Human Feedback" 的缩写:
+> - Reinforcement Learning = 强化学习
+> - Human Feedback = 人类反馈
+> - 指通过人类标注者的反馈信号来训练模型
+> - 结合强化学习和监督学习的方法
+> - 常用于提升大语言模型的对齐性和安全性
+
+## Quantized (量化)
+
+> "Quantized" 源自物理学中的"量子化"概念:
+> - Quantize = 离散化、分级
+> - 在 AI 中指将模型参数从高精度(如浮点数)转换为低精度(如整数)
+> - 目的是减少模型体积和计算资源消耗
+> - 常用于模型压缩和加速推理
+
 
 <span class="text-red-500 font-bold">持续更新中...</span> 
