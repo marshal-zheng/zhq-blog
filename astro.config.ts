@@ -4,15 +4,21 @@ import react from "@astrojs/react";
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
 import sitemap from "@astrojs/sitemap";
-import { SITE, LOCALE } from "./src/config";
+import { SITE } from "./src/config";
 import astroI18next from 'astro-i18next';
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import mdx from '@astrojs/mdx'
+import fs from 'node:fs';
 
 // https://astro.build/config
 export default defineConfig({
   site: SITE.website,
   integrations: [
+    mdx({
+      extendMarkdownConfig: true,
+      optimize: true
+    }),
     tailwind({
       applyBaseStyles: false,
     }),
@@ -23,7 +29,8 @@ export default defineConfig({
     astroI18next()
   ],
   server: {
-    host: true
+    host: true,
+    port: 4323,
   },
   markdown: {
     remarkPlugins: [
@@ -38,7 +45,6 @@ export default defineConfig({
     ],
     rehypePlugins: [rehypeKatex],
     shikiConfig: {
-      // For more themes, visit https://shiki.style/themes
       themes: { light: "github-light", dark: "night-owl" },
       wrap: true,
     },
@@ -46,7 +52,14 @@ export default defineConfig({
   vite: {
     optimizeDeps: {
       exclude: ["@resvg/resvg-js"],
+      include: ["@splinetool/runtime"]
     },
+    server: {
+      // https: {
+      //   key: fs.readFileSync('./localhost-key.pem'),
+      //   cert: fs.readFileSync('./localhost.pem'),
+      // }
+    }
   },
   scopedStyleStrategy: "where",
   experimental: {
