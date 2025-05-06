@@ -21,6 +21,7 @@ import { t } from "i18next"
       >
         {t('goBackHome')}
       </LinkButton>
+      
     </div>
   </main>
 
@@ -40,4 +41,59 @@ import { t } from "i18next"
   .not-found-wrapper p {
     @apply mt-4 text-2xl sm:text-3xl;
   }
+  .spline-container {
+    @apply w-full h-[400px] max-w-lg border border-gray-200 rounded-lg overflow-hidden;
+  }
 </style>
+
+<script>
+  // 客户端脚本，用于动态加载和渲染额外的Spline组件
+  document.addEventListener('DOMContentLoaded', async () => {
+    try {
+      const container = document.querySelector('.spline-container');
+      if (!container) return;
+      
+      // 动态创建第二个Spline容器
+      const extraContainer = document.createElement('div');
+      extraContainer.className = 'spline-native mt-4 h-[300px] border border-gray-200 rounded-lg overflow-hidden';
+      container.after(extraContainer);
+      
+      // 显示加载状态
+      extraContainer.innerHTML = '<div class="flex items-center justify-center h-full"><span class="animate-pulse text-gray-400">加载3D场景中...</span></div>';
+      
+      // 手动创建canvas元素
+      const canvas = document.createElement('canvas');
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      
+      try {
+        // 动态导入Spline运行时
+        const { Application } = await import('@splinetool/runtime');
+        
+        // 创建Spline应用
+        extraContainer.innerHTML = '';
+        extraContainer.appendChild(canvas);
+        const app = new Application(canvas);
+        
+        // 添加事件监听器
+        app.addEventListener('load', () => {
+          console.log('Spline场景加载成功');
+        });
+        
+        app.addEventListener('error', (err) => {
+          console.error('Spline场景加载错误:', err);
+          extraContainer.innerHTML = '<div class="flex items-center justify-center h-full text-red-500">加载失败，请检查控制台</div>';
+        });
+        
+        // 加载场景
+        const sceneUrl = 'https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode';
+        await app.load(sceneUrl);
+      } catch (err) {
+        console.error('加载Spline运行时错误:', err);
+        extraContainer.innerHTML = '<div class="flex items-center justify-center h-full text-red-500">加载失败，请检查控制台</div>';
+      }
+    } catch (err) {
+      console.error('整体加载失败:', err);
+    }
+  });
+</script>
