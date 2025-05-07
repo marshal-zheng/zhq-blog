@@ -7,8 +7,6 @@ interface SplineSceneProps {
 }
 
 export function SplineScene({ scene, className }: SplineSceneProps) {
-  console.log('渲染SplineScene组件，场景URL:', scene);
-
   return (
     <Suspense
       fallback={
@@ -40,8 +38,6 @@ export function SplineScene({ scene, className }: SplineSceneProps) {
       <Spline
         scene={scene}
         className={className}
-        onLoad={() => console.log('Spline场景加载成功:', scene)}
-        onError={(err) => console.error('Spline场景加载错误:', err)}
       />
     </Suspense>
   )

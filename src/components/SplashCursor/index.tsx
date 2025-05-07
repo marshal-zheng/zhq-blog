@@ -1,6 +1,13 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 
+// 为Window对象扩展isMobileDevice属性
+declare global {
+  interface Window {
+    isMobileDevice?: boolean;
+  }
+}
+
 function SplashCursor({
   // Add whatever props you like for customization
   SIM_RESOLUTION = 128,
@@ -20,8 +27,21 @@ function SplashCursor({
 }) {
   const canvasRef = useRef(null);
   const [isPostDetail, setIsPostDetail] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  if (isMobile || isPostDetail) {
+    return null;
+  }
+
+
 
   useEffect(() => {
+    // 检查是否为移动设备
+    if (typeof window !== 'undefined' && window.isMobileDevice) {
+      setIsMobile(true);
+      return; // 如果是移动设备，直接返回，不初始化SplashCursor
+    }
+
     // 检查当前URL路径，如果是博客文章详情页（/posts/{slug}/格式），则不显示SplashCursor
     const currentPath = window.location.pathname;
     const isDetail = /^\/posts\/[^/]+\/?$/.test(currentPath);
@@ -1261,13 +1281,19 @@ function SplashCursor({
   ]);
 
   return (
-    <>
-      {!isPostDetail && (
-        <div className="fixed top-0 left-0 z-50 pointer-events-none">
-          <canvas ref={canvasRef} id="fluid" className="w-screen h-screen" />
-        </div>
-      )}
-    </>
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "fixed",
+        width: "100vw",
+        height: "100vh",
+        top: 0,
+        left: 0,
+        zIndex: -1,
+        userSelect: "none",
+        pointerEvents: "auto",
+      }}
+    />
   );
 }
 

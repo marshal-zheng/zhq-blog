@@ -115,9 +115,14 @@ const structuredData = {
 
     <script is:inline src="/toggle-theme.js" async></script>
     <link rel="stylesheet" href="/css/katex.min.css" />
+    
+    <script is:inline>
+      // 保存是否为移动设备的标志到window对象
+      window.isMobileDevice = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    </script>
   </head>
   <body>
-    {!isPostDetail && <SplashCursor client:only="react" />}
+    {!isPostDetail && <SplashCursor client:load />}
     <slot />
   </body>
 </html>
