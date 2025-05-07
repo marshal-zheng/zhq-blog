@@ -30,6 +30,9 @@ const {
   scrollSmooth = false,
 } = Astro.props;
 
+const currentPath = Astro.url.pathname;
+const isPostDetail = /^\/posts\/[^/]+\/?$/.test(currentPath);
+
 const socialImageURL = new URL(
   ogImage ?? SITE.ogImage ?? "og.png",
   Astro.url.origin
@@ -113,7 +116,7 @@ const structuredData = {
     <link rel="stylesheet" href="/css/katex.min.css" />
   </head>
   <body>
-    <SplashCursor client:only="react" />
+    {!isPostDetail && <SplashCursor client:only="react" />}
     <slot />
   </body>
 </html>
