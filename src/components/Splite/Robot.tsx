@@ -1,14 +1,34 @@
 import { SplineScene } from "./index";
 import { Card } from "./Card"
 import { Spotlight } from "./spotlight"
+import { useEffect, useState } from "react";
 
 export function SplineSceneBasic() {
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Initial check
+    checkIsMobile();
+    
+    // Add event listener for window resize
+    window.addEventListener('resize', checkIsMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
+
   return (
     <Card className="w-full h-[500px] bg-black/[0.96] relative overflow-hidden">
-      {/* <Spotlight
-        className="-top-40 left-0 md:left-60 md:-top-20"
-        fill="white"
-      /> */}
+      {isMobile && (
+        <Spotlight
+          className="-top-40 left-0 md:left-60 md:-top-20"
+          fill="white"
+        />
+      )}
 
       <div className="flex h-full">
         {/* Left content */}
