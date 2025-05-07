@@ -2,6 +2,7 @@
 import { LOCALE, SITE } from "@config";
 import "@styles/base.css";
 import { ViewTransitions } from "astro:transitions";
+import { SplashCursor } from "@components/SplashCursor";
 
 const googleSiteVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
 
@@ -112,6 +113,7 @@ const structuredData = {
     <link rel="stylesheet" href="/css/katex.min.css" />
   </head>
   <body>
+    <SplashCursor client:only="react" />
     <slot />
   </body>
 </html>
