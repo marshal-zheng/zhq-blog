@@ -82,7 +82,7 @@ export function HeroVideoDialog({
         className="relative cursor-pointer group"
         onClick={() => setIsVideoOpen(true)}
       >
-        <span className="text-red-500 border-b-2 border-dashed border-red-600/90 pb-1 hover:border-red-600 transition-colors group-hover:border-red-600 font-medium">点击查看我的数字分身</span>
+        <span className="text-red-500 border-b-2 border-dashed border-red-600/90 pb-1 hover:border-red-600 transition-colors group-hover:border-red-600 font-medium">点击此处可查看我的数字分身</span>
       </div>
       <AnimatePresence>
         {isVideoOpen && (
