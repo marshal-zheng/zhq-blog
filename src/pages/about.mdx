@@ -4,13 +4,37 @@ title: "关于ZHQ"
 ---
 
 import { SplineSceneBasic } from "../components/Splite/Robot.tsx";
+import { HeroVideoDialog } from "../components/VideoDialog.tsx";
+
 
 ## 介绍
 
-📛 可以叫我「HQ」  
+<div class="profile-video flex items-center gap-4">
+  <span class="text-red-600">📛 可以叫我「HQ」</span>
+  <div className="relative">
+    <HeroVideoDialog
+      client:load
+      className="dark:hidden block"
+      animationStyle="from-center"
+      videoSrc="https://marsio.top/videos/zhq_profile.mp4"
+      thumbnailSrc="https://startup-template-sage.vercel.app/hero-light.png"
+      thumbnailAlt="Hero Video"
+    />
+    <HeroVideoDialog
+      client:load
+      className="hidden dark:block"
+      animationStyle="from-center"
+      videoSrc="https://marsio.top/videos/zhq_profile.mp4"
+      thumbnailSrc="https://startup-template-sage.vercel.app/hero-dark.png"
+      thumbnailAlt="Hero Video"
+    />
+  </div>
+</div>
 🖥️ 开源爱好者，[vue-grid-layout](https://github.com/marshal-zheng/vue-grid-layout)、[vue-resizable](https://github.com/marshal-zheng/vue-resizable)、[vue-draggable](https://github.com/marshal-zheng/vue-draggable)、[vue-split-pane](https://github.com/marshal-zheng/vue-split-pane) 等库作者
 
   <SplineSceneBasic client:load />
+
+ 
 
 ## 如何找到我
 
