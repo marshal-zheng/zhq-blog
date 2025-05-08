@@ -80,14 +80,13 @@ export function HeroVideoDialog({
     <div className={clsx("relative", className)}>
       <div
         className="relative cursor-pointer group"
-        onClick={() => setIsVideoOpen(true)}
+        onClick={() => setIsVideoOpen(false)}
       >
         <div className="flex items-center gap-2 transform transition-transform hover:scale-105">
           <Play className="text-red-500 group-hover:text-red-600 size-5" />
           <span className="text-red-500 font-medium border-b-2 border-dashed border-red-600 pb-1 group-hover:border-red-600">
             点击此处可观看我的数字分身
           </span>
-          
         </div>
       </div>
       <AnimatePresence>
