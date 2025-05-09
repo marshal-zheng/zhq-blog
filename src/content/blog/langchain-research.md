@@ -1,7 +1,7 @@
 ---
 author: ZHQ
 pubDatetime: 2025-04-05T22:18:00.000+08:00
-title: 'langchain报告'
+title: 'Langchain报告'
 featured: false
 draft: false
 tags:
