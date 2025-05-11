@@ -80,7 +80,7 @@ export function HeroVideoDialog({
     <div className={clsx("relative", className)}>
       <div
         className="relative cursor-pointer group"
-        onClick={() => setIsVideoOpen(false)}
+        onClick={() => setIsVideoOpen(true)}
       >
         <div className="flex items-center gap-2 transform transition-transform hover:scale-105">
           <Play className="text-red-500 group-hover:text-red-600 size-5" />
