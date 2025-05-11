@@ -66,9 +66,7 @@ const FormattedDatetime = ({ pubDatetime, modDatetime }: DatetimesProps) => {
     timeZone: 'Asia/Shanghai',
     year: 'numeric',
     month: 'long',
-    day: 'numeric',
-    hour: 'numeric',
-    minute: '2-digit',
+    day: 'numeric'
   });
 
   const time = myDatetime.toLocaleTimeString(LOCALE.langTag, {
