@@ -1,6 +1,6 @@
 ---
 author: ZHQ
-pubDatetime: 2025-05-09T12:45:00.000+08:00
+pubDatetime: 2025-05-09T12:45:00+08:00
 title: 'Spline 深度解析：3D 设计协作的新时代'
 featured: false
 draft: false

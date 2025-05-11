@@ -1,6 +1,6 @@
 ---
 author: ZHQ
-pubDatetime: 2025-05-09T13:03:00.000+08:00
+pubDatetime: 2025-05-09T13:03:00+08:00
 title: '关于Git 使用的那点事'
 featured: false
 draft: false
