@@ -61,16 +61,18 @@ const FormattedDatetime = ({ pubDatetime, modDatetime }: DatetimesProps) => {
   const myDatetime = new Date(
     modDatetime && modDatetime > pubDatetime ? modDatetime : pubDatetime
   );
-  console.log('pubDatetime', pubDatetime)
-  console.log('modDatetime', modDatetime)
 
   const date = myDatetime.toLocaleDateString(LOCALE.langTag, {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
+    timeZone: 'Asia/Shanghai',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
   });
 
   const time = myDatetime.toLocaleTimeString(LOCALE.langTag, {
+    timeZone: 'Asia/Shanghai',
     hour: "2-digit",
     minute: "2-digit",
   });
