@@ -61,6 +61,8 @@ const FormattedDatetime = ({ pubDatetime, modDatetime }: DatetimesProps) => {
   const myDatetime = new Date(
     modDatetime && modDatetime > pubDatetime ? modDatetime : pubDatetime
   );
+  console.log('pubDatetime', pubDatetime)
+  console.log('modDatetime', modDatetime)
 
   const date = myDatetime.toLocaleDateString(LOCALE.langTag, {
     year: "numeric",
