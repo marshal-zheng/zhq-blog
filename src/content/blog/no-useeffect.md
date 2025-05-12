@@ -150,8 +150,6 @@ function Counter() {
 }
 ```
 
-![事件处理流程对比图](https://via.placeholder.com/800x300.png?text=Event+Handling:+useEffect+vs+Direct+Handler)
-
 这样做的好处同样非常明显：
 
 *   **逻辑直接明了**：用户点击按钮这个事件，直接触发了 `setCount()` 这个状态更新函数。
