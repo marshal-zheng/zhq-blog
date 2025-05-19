@@ -1,6 +1,6 @@
 ---
 author: ZHQ
-pubDatetime: 2025-05-09T13:03:00+08:00
+pubDatetime: 2025-01-09T13:03:00+08:00
 title: '关于Git 使用的那点事'
 featured: false
 draft: false
@@ -12,13 +12,13 @@ description: 'AI Reserch之git使用。'
 
 ## 掌握 Git 对于现代开发的意义
 
-在如今的软件开发领域，Git 早已成为版本控制的标配，其重要性不言而喻。它不仅仅是一个代码备份系统那么简单，更是支撑团队高效协作、细致追踪项目历史、从容管理复杂软件项目的核心利器。然而，尽管 Git 无处不在，许多开发者在日常的项目管理和协作中，使用起各种 Git 命令时，依然会频繁碰壁。想要真正掌握 Git，挑战并不仅仅在于记住那些命令，更关键的是要深入理解其底层的运作原理，以及这些命令是如何与这些原理互动的。不少开发者只是浅尝辄止地学习了命令的表面用法，并未真正洞悉其背后的机制，这在处理一些复杂操作时，尤其容易导致困惑和错误。正如一些开发者亲身经历的那样，Git 抛出的错误有时会让人摸不着头脑，因为数据可能隐藏在那些不熟悉其内部模型的人意想不到的角落。
+在如今的软件开发领域，Git 早已成为版本控制的标配，其重要性不言而喻。它不仅仅是一个代码备份系统那么简单，更是支撑团队高效协作、细致追踪项目历史、从容管理复杂软件项目的核心利器。然而，尽管 Git 无处不在，许多从业者在日常的项目管理和协作中，使用起各种 Git 命令时，依然会频繁碰壁。想要真正掌握 Git，挑战并不仅仅在于记住那些命令，更关键的是要深入理解其底层的运作原理，以及这些命令是如何与这些原理互动的。不少开发者只是浅尝辄止地学习了命令的表面用法，并未真正洞悉其背后的机制，这在处理一些复杂操作时，尤其容易导致困惑和错误。正如一些开发者亲身经历的那样，Git 抛出的错误有时会让人摸不着头脑，因为数据可能隐藏在那些不熟悉其内部模型的人意想不到的角落。
 
 这份指南旨在超越 Git 的入门概念，为开发者们提供一份既深入又实用的进阶手册。我们将详细探讨在实际开发中经常用到的 Git 命令、各种高级技巧、行之有效的工作流程，以及常见问题的解决方案，所有信息均来源于一手的英文资料，以确保内容的深度和实践价值。我们的目标是帮助开发者们真正“掌握”Git，而不仅仅是停留在“会用”的层面。
 
 这份指南主要面向那些已经具备 Git 基础操作经验，并希望进一步深化其专业知识的中高级开发者。我们将首先简要介绍 Git 的核心机制，然后深入探讨常用命令在实践中的应用及其细微差别，接着会详细解析一系列高级技术（例如 rebase、cherry-pick、bisect、worktree、hooks、submodule/subtree、rerere），并对比分析不同的工作流程和分支策略，讨论如何利用 Git 来提升代码质量和协作效率，最后总结一些常见的反模式、容易掉进去的陷阱以及重要的安全注意事项。
 
-## Git 核心机制：深入理解（简述）
+## Git 核心机制（简述）
 
 Git 之所以如此强大和灵活，其根源在于它那简洁而强大的、基于内容寻址的对象模型（包括 Blob、Tree、Commit），以及对指针（如 Branch、HEAD）的巧妙运用。理解这个基于图（Graph）的结构，是揭开 Git 那些看似复杂操作背后神秘面纱的关键所在。
 
@@ -30,7 +30,7 @@ Git 之所以如此强大和灵活，其根源在于它那简洁而强大的、�
 *   **HEAD 指针**: HEAD 是一个非常特殊的指针，它通常指向你当前检出的那个本地分支的顶端 Commit。可以把它理解为你当前工作的基础状态。当 HEAD 直接指向一个 Commit 而不是一个分支名时，你就处于一种被称为 "分离 HEAD" (detached HEAD) 的特殊状态。
 *   **底层命令 (Plumbing) vs. 高层命令 (Porcelain)**: Git 的命令大致可以分为两类。底层命令是 Git 内部使用的那些低级别的命令，用于执行一些基本操作（比如 `hash-object`, `write-tree`, `commit-tree`）。而高层命令则是我们日常更常使用的、对用户更友好的命令（比如 `git add`, `git commit`, `git checkout`）。理解高层命令是如何调用这些底层命令来操作 Git 的对象模型的，对于更深入地理解 Git 的工作方式非常有帮助。
 
-虽然这一节只是一个简要的概述，但在后续章节解释像 `reset`、`rebase` 或 `checkout` 这类命令时，时常回顾这些核心概念，将有助于你从更深的层次去理解它们，并能更好地推断出这些命令将会产生的效果。
+---
 
 ## Git 核心命令：实践应用与精妙之处
 
@@ -38,11 +38,165 @@ Git 之所以如此强大和灵活，其根源在于它那简洁而强大的、�
 
 ### 工作区与暂存区管理
 
-*   `git status`: 这是了解当前 Git 环境状态、防止意外提交的最常用命令。它会清晰地告诉你工作目录和暂存区目前是何种状态。
-*   `git add <file>` / `git add .` / `git add -A`: 这三个命令分别用于将指定文件、所有已修改和新建的文件、或者所有变更（包括已删除的文件）添加到暂存区。
-*   `git add -p` (交互式暂存): 这是一个非常强大的工具，它允许你选择性地暂存文件内的部分更改（Git 会将更改拆分成一个个 "hunk"）。这是创建具有原子性的、逻辑清晰的提交的关键。你需要熟悉它在交互过程中给出的一些提示符的含义（比如 `y` 表示暂存这个 hunk，`n` 表示不暂存，`s` 表示将当前 hunk 分割成更小的部分，`e` 表示手动编辑这个 hunk 等）。
-*   `git reset HEAD <file>`: 这个命令会将指定文件从暂存区移除，但不会改变你工作目录中该文件的内容。它常用于撤销之前的 `git add` 操作。
-*   `git checkout -- <file>` / `git restore <file>`: 这两个命令（`restore` 是较新的、更推荐的用法）会放弃你在工作目录中对指定文件所做的所有修改，将其恢复到最近一次提交时的状态。**请注意：这个操作会丢失你工作目录中未保存的修改，务必谨慎使用。**
+`git status`: 其作用是了解当前 Git 环境状态、防止意外提交的最常用命令。它会清晰地告诉你工作目录和暂存区目前是何种状态。
+
+`git add <file>` / `git add .` / `git add -A`: 这三个命令分别用于将指定文件、所有已修改和新建的文件、或者所有变更（包括已删除的文件）添加到暂存区。
+
+
+`git reset HEAD <file>`: 这个命令会将指定文件从暂存区移除，但不会改变你工作目录中该文件的内容。它常用于撤销之前的 `git add` 操作. 见下面示例:
+```vim
+# 示例：使用 `git add -p` 在前端开发中创建原子性提交
+
+# 假设你在开发一个前端项目时，修改了 `App.js` 文件，包含以下两项独立的更改：
+# 1. 修复了一个按钮点击事件的 bug
+# 2. 添加了一个新的输入框功能
+
+# 运行以下命令开始交互式暂存
+$ git add -p App.js
+
+# Git 会将文件的更改拆分成一个个 "hunk"（代码块），并逐一展示给你：
+# 第一个 hunk（修复按钮点击事件的 bug）
+diff --git a/src/App.js b/src/App.js
+index abc123..def456 100644
+--- a/src/App.js
++++ b/src/App.js
+@@ -10,7 +10,7 @@ function handleClick() {
+     // 修复了一个错误
+-    console.log('Button clicked');
++    alert('Button clicked!');
+ }
+
+Stage this hunk [y,n,q,a,d,e,?]?
+
+# 你可以输入以下选项：
+# y - 暂存这个 hunk
+# n - 跳过这个 hunk，不暂存
+# q - 退出交互式暂存
+# a - 暂存所有剩余的 hunk
+# d - 跳过所有剩余的 hunk
+# e - 编辑当前 hunk
+# ? - 显示帮助
+
+# 假设你选择 `y` 暂存第一个 hunk（修复按钮点击事件的部分）
+Stage this hunk [y,n,q,a,d,e,?]? y
+
+# Git 会继续展示下一个 hunk（添加输入框功能的部分）
+diff --git a/src/App.js b/src/App.js
+index def456..ghi789 100644
+--- a/src/App.js
++++ b/src/App.js
+@@ -20,6 +20,8 @@ function App() {
+     // 添加了一个新的输入框
++    <input type="text" placeholder="Enter your name" />
++    <button onClick={handleClick}>Submit</button>
+ }
+
+Stage this hunk [y,n,q,a,d,e,?]?
+
+# 假设你选择 `n` 跳过这个 hunk，不暂存
+Stage this hunk [y,n,q,a,d,e,?]? n
+
+# 完成后，运行 `git status` 查看暂存区状态
+$ git status
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   src/App.js
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+        modified:   src/App.js
+
+# 此时，只有修复按钮点击事件的部分被暂存。你可以为这部分创建一个提交：
+$ git commit -m "fix: correct button click behavior to show alert"
+
+# 然后，暂存剩余的更改（添加输入框功能的部分）并创建另一个提交：
+$ git add App.js
+$ git commit -m "feat: add input field for user name"
+
+# 最终，你的提交历史会清晰地反映出两个独立的逻辑变更：
+$ git log --oneline
+ghi7890 feat: add input field for user name
+def4567 fix: correct button click behavior to show alert
+```
+
+`git add -p` (交互式暂存): 个非常强大的工具，它允许你选择性地暂存文件内的部分更改（Git 会将更改拆分成一个个 "hunk"）。这是创建具有原子性的、逻辑清晰的提交的关键。你需要熟悉它在交互过程中给出的一些提示符的含义（比如 `y` 表示暂存这个 hunk，`n` 表示不暂存，`s` 表示将当前 hunk 分割成更小的部分，`e` 表示手动编辑这个 hunk 等）. 见下面示例:
+```vim
+# 使用 `git reset HEAD <file>` 撤销暂存区中的更改
+
+# 假设你修改了两个文件：file1.js 和 file2.js, 并且git add
+$ git status
+On branch main
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   file1.js
+        modified:   file2.js
+
+# 你发现 file2.js 不应该被包含在本次提交中
+# 使用 `git reset HEAD file2.js` 将它从暂存区移除
+$ git reset HEAD file2.js
+Unstaged changes after reset:
+M       file2.js
+
+# 查看状态，file2.js 已从暂存区移除，但仍保留在工作目录中
+$ git status
+On branch main
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   file1.js
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+        modified:   file2.js
+
+# 此时，你可以继续提交 file1.js，而 file2.js 的更改不会被包含在提交中
+$ git commit -m "fix: update file1.js"
+```
+
+`git checkout -- <file>` / `git restore <file>`: 这两个命令（restore 是较新的、更推荐的用法）会放弃你在工作目录中对指定文件所做的所有修改，将其恢复到最近一次提交时的状态。 <span class="text-amber-600 font-bold">⚠️ 这个操作会丢失你工作目录中未保存的修改，务必谨慎使用</span>。见下面示例:
+```vim
+# 示例：使用 git restore 撤销实验性更改
+
+# 假设你在调试一个导航栏在移动设备上的显示问题
+# 你在 CSS 文件中修改了多处样式进行测试
+$ git status
+On branch feature/responsive-nav
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   src/styles/navbar.css
+
+# 查看你做的更改
+$ git diff src/styles/navbar.css
+diff --git a/src/styles/navbar.css b/src/styles/navbar.css
+index 8712a45..b9cd123 100644
+--- a/src/styles/navbar.css
++++ b/src/styles/navbar.css
+@@ -12,7 +12,7 @@
+ /* 你修改了几个媒体查询断点进行测试 */
+-@media (max-width: 768px) {
++@media (max-width: 600px) {
+   .navbar {
+-    padding: 10px;
++    padding: 5px;
+     /* 其他调试性修改... */
+@@ -25,10 +25,20 @@
+ /* 添加了一些颜色和边框以便可视化调试 */
+ .navbar-item {
+-  color: #333;
++  color: red !important;
++  border: 1px solid blue;
+ }
+
+# 经过测试后，你发现这些更改是纯粹的调试目的
+# 你需要恢复文件到原始状态，准备重新实现正确的解决方案
+$ git restore src/styles/navbar.css
+# 或者使用旧的命令: git checkout -- src/styles/navbar.css
+
+# 确认文件已恢复到之前的状态
+$ git status
+On branch feature/responsive-nav
+nothing to commit, working tree clean
+```
 
 ### 提交变更
 
@@ -63,6 +217,19 @@ Git 之所以如此强大和灵活，其根源在于它那简洁而强大的、�
     *   **Fast-forward (快进合并)**: 如果你当前所在的分支就是要合并进来的那个分支的直接祖先（也就是说，当前分支的历史是目标分支历史的一部分，并且没有发生分叉），那么 Git 只需将当前分支的指针向前移动到被合并分支的顶端即可。这种合并不会产生新的合并提交。
     *   **Three-way Merge (三方合并)**: 如果分支的历史已经发生了分叉，Git 会找到这两个分支的共同祖先提交，然后进行一次三方合并。这会生成一个新的合并提交 (merge commit)，这个特殊的提交会有两个父提交。
 *   **基本冲突解决**: 当 `git merge` 因为冲突而失败时，Git 会在冲突的文件中插入一些特殊的标记 (例如 `<<<<<<< HEAD`, `=======`, `>>>>>>> branch-name`)。你需要手动编辑这些文件，决定保留哪些更改，删除那些冲突标记，然后使用 `git add <resolved-file>` 将解决后的文件标记为已解决状态，最后执行 `git commit` 来完成这次合并提交。
+
+冲突示例:
+```js
+function calculateTotal(items) {
+<<<<<<< HEAD
+  // 主分支上的代码
+  return items.reduce((sum, item) => sum + item.price * 1.1, 0); // 添加10%税
+=======
+  // 你在功能分支上的代码
+  return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+>>>>>>> feature-branch
+}
+```
 
 ### 历史记录与检查
 
@@ -93,7 +260,7 @@ Git 之所以如此强大和灵活，其根源在于它那简洁而强大的、�
 *   `git remote set-url <name> <new-url>`: 修改一个已存在的远程仓库的 URL。
 *   `git fetch <remote>`: 从指定的远程仓库下载对象（比如提交）和引用（比如分支、标签），但它并不会自动将这些更改合并到你的本地分支。它会更新你的远程跟踪分支（例如 `origin/main`），并将下载的最新提交的顶端记录在一个特殊的引用 `FETCH_HEAD` 中。
 *   `git pull <remote> <branch>`: 这个命令会从指定的远程仓库的指定分支拉取最新的更改，并尝试将其合并到你当前的本地分支。它大致相当于先执行 `git fetch <remote> <branch>`，然后再执行 `git merge FETCH_HEAD`。
-*   `git pull --rebase <remote> <branch>`: 这个命令也会从远程拉取最新的更改，但它不是通过合并，而是通过将你本地当前分支上那些尚未推送到远程的提交，变基 (rebase) 到拉取下来的远程分支的顶端。这样做可以产生更线性的提交历史，但你需要理解变基的含义和潜在风险（我们将在 IV.A 节详细讨论）。
+*   `git pull --rebase <remote> <branch>`: 这个命令也会从远程拉取最新的更改，但它不是通过合并，而是通过将你本地当前分支上那些尚未推送到远程的提交，变基 (rebase) 到拉取下来的远程分支的顶端。这样做可以产生更线性的提交历史，但你需要理解变基的含义和潜在风险。
 *   `git push <remote> <branch>`: 将你本地分支的提交上传到指定的远程仓库的对应分支。当你第一次推送一个新的本地分支时，使用 `-u` 或 `--set-upstream` 选项可以建立本地分支与远程分支之间的跟踪关系，之后你就可以直接使用 `git push`（不带额外参数）来推送了。
 *   `git push origin :<branch_name>` 或 `git push origin --delete <branch_name>`: 这两种方式都可以用来删除指定的远程分支。
 
@@ -119,15 +286,15 @@ Git 之所以如此强大和灵活，其根源在于它那简洁而强大的、�
         *   **从该提交创建一个新的分支**：`git branch <new-branch-name> <hash>`。
         *   **将当前分支强制重置到该提交**：`git reset --hard <hash>` (**注意：这个操作会丢失你当前分支指针之后的所有提交，以及工作区和暂存区的所有未提交更改，务必小心！**)。
 
-`git reflog` 是一个极其重要的安全工具，它大大降低了使用像 `reset` 和 `rebase` 这类会重写历史的命令所带来的风险。开发者们不应将其视为一个晦涩难懂的命令，而应将其看作是能够自信地使用 Git 高级功能、减少对数据丢失恐惧的坚实后盾。
+`git reflog` 是一个极其重要的安全工具，它大大降低了使用像 `reset` 和 `rebase` 这类会重写历史的命令所带来的风险。可以将其看作是能够自信地使用 Git 高级功能、减少对数据丢失恐惧的坚实后盾。
 
 ## 应对复杂场景与提升效率的高级 Git 技术
 
-掌握 Git 的一些高级技术，能够显著提升你在处理复杂开发场景时的效率，并帮助你维护一个更加整洁的代码库。然而，这些强大的工具也往往伴随着更高的复杂性和潜在的风险，尤其是在涉及到历史重写和团队协作的时候，更需谨慎。
+掌握 Git 的一些高级技术，能够显著提升我们在处理复杂开发场景时的效率，并帮助你维护一个更加整洁的代码库。然而，这些强大的工具也往往伴随着更高的复杂性和潜在的风险，尤其是在涉及到历史重写和团队协作的时候，更需谨慎。
 
-### A. 精通历史重写：`git rebase`
+### A. 历史重写：`git rebase`
 
-*   **概念辨析 (Rebase vs. Merge)**: `git merge` 通过创建一个新的合并提交来整合不同分支的历史。这样做的好处是保留了分支实际的开发轨迹，但缺点是可能会让提交历史的图谱变得复杂难懂。相比之下，`git rebase` 则是通过将一个分支上的提交逐一“重放”到另一个基底分支（通常是你的目标分支，比如 `main` 或 `develop`）之上，来重写提交历史。这样做的结果是创建一条看起来更简洁的线性历史记录。
+*   **Rebase vs. Merge**: `git merge` 通过创建一个新的合并提交来整合不同分支的历史。这样做的好处是保留了分支实际的开发轨迹，但缺点是可能会让提交历史的图谱变得复杂难懂。相比之下，`git rebase` 则是通过将一个分支上的提交逐一“重放”到另一个基底分支（通常是你的目标分支，比如 `main` 或 `develop`）之上，来重写提交历史。这样做的结果是创建一条看起来更简洁的线性历史记录。
 *   **Rebase 的适用场景**:
     *   **同步特性分支**: 当你在开发一个特性分支时，定期将其 rebase 到最新的目标分支（例如 `main`）上。这样做的好处是，你可以尽早发现并解决你的特性代码与主线代码之间的冲突，并确保你的特性分支始终是基于最新的代码进行开发的。
     *   **清理本地历史**: 在你准备将本地的特性分支推送到远程仓库，或者在创建 Pull Request 之前，使用 rebase（尤其是交互式 rebase）来整理、合并或修改你的本地提交，可以让你的提交历史看起来更清晰、更有逻辑性。
@@ -141,27 +308,45 @@ Git 之所以如此强大和灵活，其根源在于它那简洁而强大的、�
         *   `fixup` (或 `f`): 与 `squash` 类似，但它会直接丢弃该提交的提交信息，只保留前一个提交的信息。这个指令常用于合并一些小的修正性提交。
         *   `drop` (或 `d`): 完全移除该提交及其引入的所有更改。
         *   `exec` (或 `x`): 在应用该提交之后，执行一个你指定的 shell 命令。这个指令可以用于在 rebase 过程中自动运行测试等。
-*   **详细示例：拆分单个提交**
-    假设你有一个提交，里面不小心包含了两个逻辑上独立的变更（例如，你既更新了 README 文件的格式，又添加了一个全新的 blame 功能），现在你希望将它拆分成两个独立的、更具原子性的提交。
-    1.  启动交互式 rebase，确保其范围包含了你需要拆分的那个提交。例如，如果那个问题提交是你最近的倒数第二个提交，你可以运行：`git rebase -i HEAD~3`。
-    2.  在打开的编辑器中，找到代表那个问题提交的行，将其开头的指令从 `pick` 修改为 `edit`。
-    3.  保存并关闭编辑器。Git 会应用之前的提交，然后在标记为 `edit` 的那个提交处暂停下来。
-    4.  此时，运行 `git reset HEAD^` 命令。这个命令会撤销当前的提交（即标记为 `edit` 的那个提交），但会将其引入的所有更改保留在你的工作目录和暂存区中（这是一种混合重置）。
-    5.  现在，你的工作目录包含了原提交的所有更改。首先，选择性地暂存第一个逻辑变更所涉及的文件，比如：`git add README`。
-    6.  然后，为这个变更创建一个新的提交：`git commit -m "Update README formatting"`。
-    7.  接着，暂存第二个逻辑变更所涉及的文件，比如：`git add lib/simplegit.rb`。
-    8.  再为这个变更创建另一个新的提交：`git commit -m "Add blame"`。如果你的原提交需要拆分成更多的部分，只需重复步骤 7-8 即可。
-    9.  当所有的更改都已经被重新组织为新的、更小的提交之后，执行 `git rebase --continue` 来完成整个 rebase 过程。
-*   **高级选项**:
-    *   `--autostash`: 这个选项会在 rebase 开始之前，自动地将你本地未提交的更改 stash 起来，然后在 rebase 成功结束后再自动地 apply 回来。这有助于避免 rebase 操作与你本地“脏”的工作区发生冲突。
-    *   `--onto`: 这个选项用于处理一些更复杂的 rebase 场景。它允许你将一段提交历史从一个基底移动到另一个完全不同的基底上，甚至可以不基于你当前所在的分支来进行操作。
-*   **黄金法则与风险**:
-    *   **绝对不要 rebase 那些已经被推送到共享仓库，并且可能已经被其他人拉取过的分支！** Rebase 会创建全新的提交（它们会有不同的哈希值）来替换掉旧的提交，这会彻底改变分支的历史。如果其他人已经基于你旧的历史进行了开发，那么他们的本地仓库就会与远程仓库产生严重的分歧，从而导致极大的混乱和难以解决的合并问题。
-    *   Rebase 最适合的场景是用来清理你本地的、尚未与他人分享的提交历史。
-    *   **冲突风险**: 在进行 rebase 时，每一个被“重放”的提交都有可能与新的基底分支产生冲突。对于那些长期偏离主线开发的分支来说，rebase 可能会导致你需要解决大量的冲突。因此，频繁地对生命周期较短的分支进行 rebase，可以有效地减少冲突的复杂性。
-    *   **元数据丢失**: 当你使用 `squash` 或 `fixup` 来合并提交时，原始提交的作者、日期等元数据可能会丢失，或者被合并后的新提交信息所覆盖。
-    *   **中止操作**: 如果在 rebase 过程中遇到了难以解决的问题，或者你意识到自己操作失误了，可以使用 `git rebase --abort` 命令来安全地中止 rebase 过程，它会将你的仓库恢复到 rebase 开始之前的状态。
 
+假设你在开发一个新功能，对 `file1.js` 进行了多次修改，提交历史如下：
+```bash
+$ git log --oneline
+a7d3f12 Fix typo in error message
+b8e4c23 Add debug logs
+c9d5e34 Implement validation function
+d0f6g45 WIP: Start implementing validation
+e1h7i56 Refactor file1.js structure
+```
+在提交 PR 之前，你想整理这些提交，使历史更加清晰：
+```bash
+$ git rebase -i HEAD~5
+```
+这会打开编辑器，显示最近 5 个提交：
+```bash
+pick e1h7i56 Refactor file1.js structure
+pick d0f6g45 WIP: Start implementing validation
+pick c9d5e34 Implement validation function
+pick b8e4c23 Add debug logs
+pick a7d3f12 Fix typo in error message
+
+# 命令说明:
+# p, pick <commit> = 使用提交
+# r, reword <commit> = 使用提交，但修改提交信息
+# e, edit <commit> = 使用提交，停下来修改
+# s, squash <commit> = 使用提交，但融合到前一个提交
+# f, fixup <commit> = 类似 squash，但丢弃提交信息
+# d, drop <commit> = 删除提交
+# ...其他选项...
+```
+修改变基计划:
+```bash
+pick e1h7i56 Refactor file1.js structure
+d d0f6g45 WIP: Start implementing validation
+pick c9d5e34 Implement validation function
+f b8e4c23 Add debug logs
+r a7d3f12 Fix typo in error message
+```
 ### B. 精确应用提交：`git cherry-pick`
 
 *   **目的**: 这个命令允许你将单个或多个特定的提交，从一个分支应用到你当前所在的分支上，而无需合并整个源分支的所有内容。
@@ -177,35 +362,90 @@ Git 之所以如此强大和灵活，其根源在于它那简洁而强大的、�
     *   **谨慎使用**: `cherry-pick` 是一个非常强大的工具，但不应该被滥用。对于整合整个特性来说，`merge` 或 `rebase` 通常是更合适的选择。
     *   **重复提交风险**: 如果一个提交已经被 `cherry-pick` 到了 B 分支，之后它的源分支 A 又通过 `merge` 的方式合并到了 B 分支，那么这个提交所引入的更改可能会在 B 分支上出现两次，从而导致潜在的问题。为了避免这种情况，在进行 `cherry-pick` 之前，最好使用 `git log` 或者 `git cherry <upstream-branch> <feature-branch>` 来检查一下目标提交是否已经存在于你的目标分支上了。
     *   **明确记录**: 由于 `cherry-pick` 会创建新的提交（即使内容完全相同，但它们的父提交和哈希值通常是不同的），建议在提交信息中注明原始提交的来源（例如，使用 `git cherry-pick -x <commit-hash>` 会自动在新的提交信息中添加 `(cherry picked from commit ...)` 的字样），或者在创建 Pull Request 时进行说明。
-    *   **上下文测试**: 务必确保被 `cherry-pick` 过去的更改，在目标分支的上下文中仍然能够正确工作，并通过所有的相关测试。
 
 ### C. 高效定位 Bug：`git bisect`
 
-*   **目的**: 这个命令使用二分查找算法，能够在你的提交历史中快速地定位到引入某个特定 bug 的第一个“坏”提交。相比于手动检查每一个提交，`git bisect` 的效率要高得多。
-*   **操作流程**:
-    1.  **启动**: 首先，运行 `git bisect start` 来启动 bisect 模式。
-    2.  **标记“坏”提交**: 然后，运行 `git bisect bad [<commit-hash>]`。通常情况下，你可以不带参数，直接运行 `git bisect bad`，这表示你当前的 `HEAD` 指针所在的提交是有问题的。
-    3.  **标记“好”提交**: 接下来，你需要运行 `git bisect good <commit-hash>`，并提供一个你明确知道没有那个 bug 的历史提交的哈希值。
-    4.  **测试与标记**: Git 会自动检出位于你标记的“好”提交和“坏”提交之间的某个中间提交。你需要在这个状态下测试你的代码，判断那个 bug 是否还存在。然后，根据测试结果，运行 `git bisect good`（如果 bug 不存在了）或者 `git bisect bad`（如果 bug 依然存在）来告知 Git 测试的结果。
-    5.  **重复**: Git 会根据你的反馈不断缩小范围，再次检出下一个中间提交，你则继续测试并标记。这个过程会一直重复，直到 Git 最终找到那个引入 bug 的第一个“坏”提交。
-    6.  **结束**: 当你找到那个引入问题的提交后，运行 `git bisect reset` 来退出 bisect 模式，你的仓库会恢复到你开始 bisect 之前的状态。
-*   **自动化 bisect**: 如果你有一个可以自动检测 bug 是否存在的测试脚本（例如，一个单元测试或集成测试脚本），那么你可以使用 `git bisect run <script-command>` 来自动化整个 bisect 过程。这个脚本需要被设计成：如果 bug 不存在（即状态是好的），则以退出码 0 结束；如果 bug 存在（即状态是坏的），则以一个非零的退出码（通常是 1 到 127 之间）结束。
-*   **处理无法测试的提交**: 如果在 bisect 过程中，Git 检出的某个提交因为其他原因（比如编译失败）而无法进行测试，你可以使用 `git bisect skip` 命令来跳过这个提交，让 Git 选择它附近的其他提交来进行测试。
+bisect命令使用二分查找算法，能够在你的提交历史中快速地定位到引入某个特定 bug 的第一个“坏”提交。相比于手动检查每一个提交，`git bisect` 的效率要高得多。我们假设有这样一个场景:
+
+假设你正在维护一个前端应用，最近用户报告网站加载速度变慢。通过检查性能指标，你确认主页加载时间从原来的 1.2 秒增加到了 3.5 秒。你知道三个月前的版本（commit `a1b2c3d`）性能是正常的，但不知道是哪个提交引入了问题; 此时就可以使用 git bisect 来定位此问题
+
+1. 启动二分查找过程
+```bash
+$ git bisect start
+```
+2. 标记当前版本为"坏"提交
+```bash
+$ git bisect bad
+```
+3. 标记已知正常的老版本为"好"提交
+```bash
+$ git bisect good a1b2c3d
+Bisecting: 78 revisions left to test after this (roughly 7 steps)
+```
+4. 测试检出的版本
+```bash
+$ git bisect bad
+Bisecting: 39 revisions left to test after this (roughly 6 steps)
+```
+5. 标记为"坏"提交
+```bash
+$ git bisect bad
+Bisecting: 39 revisions left to test after this (roughly 6 steps)
+```
+6. 继续测试并标记
+重复步骤4-5，每次Git会自动检出一个新的中间提交供你测试。
+
+比如在第5次迭代后，Git找到了第一个引入问题的提交：
+```bash
+$ git bisect bad
+e7d8f90c5d3a8b2e9c4f1d5a6e7b8c9d0a1b2c3d is the first bad commit
+commit e7d8f90c5d3a8b2e9c4f1d5a6e7b8c9d0a1b2c3d
+Author: Developer <dev@example.com>
+Date:   Mon Apr 15 10:23:45 2025 +0800
+
+    feat(images): implement lazy loading with new library
+```
+
 
 ### D. 并行开发利器：`git worktree`
 
-*   **目的**: 这个命令允许你在同一个 Git 仓库中，同时检出多个工作目录 (working trees)，并且每个工作目录都可以关联到不同的分支。这样做的好处是，你可以在不同的任务之间轻松切换，而无需频繁地使用 `git checkout` 来切换分支，也无需反复使用 `git stash` 来保存和恢复你的工作状态。
-*   **实践应用场景**:
-    *   **并行开发**: 你可以在你的主分支（例如 `main`）上进行日常的开发工作，同时在另一个 worktree 中检出某个特性分支来进行新功能的开发，或者检出某个 bugfix 分支来修复紧急的问题。
-    *   **代码评审**: 当你需要为同事的 Pull Request 进行代码检查和测试时，你可以在不干扰自己当前工作的情况下，为那个 PR 创建一个临时的 worktree 来检出其对应的分支。
-    *   **隔离实验**: 你可以在一个独立的 worktree 中进行一些实验性的开发，或者尝试一些比较大的重构，而不用担心会影响到你的主工作目录。
-    *   **多版本构建/测试**: 你可以同时检出不同版本的分支（例如 `release-1.0`, `release-2.0`），并在它们各自的 worktree 中进行构建或测试。
-*   **核心命令**:
-    *   `git worktree add <path> <branch>`: 这个命令会在你指定的路径 `<path>` 下创建一个新的工作目录，并检出你指定的分支 `<branch>`。如果那个分支不存在，你通常需要先创建它，或者基于某个已有的提交来创建。
-    *   `git worktree list`: 这个命令会显示当前仓库所关联的所有工作目录，以及它们各自对应的 `HEAD` 和分支信息。
-    *   `git worktree remove <path>`: 这个命令用于移除指定路径的工作目录。**请注意：在移除之前，务必确保那个 worktree 中没有未提交或未推送到远程的重要更改。**
-    *   `git worktree prune`: 这个命令用于清理那些与不再存在的工作目录相关的 Git 内部管理文件。通常，在你手动删除了一个 worktree 目录之后，可以运行这个命令来进行清理。
-*   **最佳实践**: 为了避免混淆，最好给你的 worktree 目录起一些有意义的路径名称；定期清理那些不再需要的 worktree；避免将一个 worktree 嵌套在另一个 worktree 的内部；另外，需要注意的是，虽然工作区是独立的，但 `.git` 目录是共享的（例如，你的 `stash` 列表在所有 worktree 中都是共享的）。
+worktree 命令允许你在同一个 Git 仓库中，同时检出多个工作目录 (working trees)，并且每个工作目录都可以关联到不同的分支。这样做的好处是，你可以在不同的任务之间轻松切换，而无需频繁地使用 `git checkout` 来切换分支，也无需反复使用 `git stash` 来保存和恢复你的工作状态。
+
+假设你正在 `main` 分支开发一个复杂的数据可视化功能，代码写到一半，突然收到线上用户报告的严重 bug，需要立即修复。我们一直常用的流程是：
+1. `git stash` 保存当前工作
+2. 切换到 `bugfix` 分支修复问题
+3. 完成后再切回 `main` 并恢复进度
+
+这种上下文切换会打断思路，降低效率，还可能遗漏恢复某些改动。使用 Git Worktree 解决步骤如下: 
+```bash
+# 查看当前工作树
+$ git worktree list
+/Users/dev/project  main
+
+# 在新目录创建 bugfix 分支的工作树
+$ git worktree add ../project-bugfix bugfix
+Preparing worktree (checking out 'bugfix')
+HEAD is now at 7f3d6e8 Last stable version
+
+# 现在你有两个完全独立的工作目录
+$ git worktree list
+/Users/dev/project        e8a2f4c [main]
+/Users/dev/project-bugfix 7f3d6e8 [bugfix]
+```
+
+*   **常用命令**
+
+    | 命令                                        | 说明                                                                           | 示例                                            |
+    |---------------------------------------------|--------------------------------------------------------------------------------|--------------------------------------------------|
+    | `git worktree list`                         | 列出所有关联的工作树，包括主工作树和所有链接的工作树                          | `git worktree list`                              |
+    | `git worktree add <path> <branch>`          | 在指定路径创建一个新的工作树，并检出指定的分支                               | `git worktree add ../bugfix-123 bugfix/issue-123` |
+    | `git worktree add -b <new-branch> <path>`   | 在指定路径创建一个新的工作树，同时创建并检出一个新分支                      | `git worktree add -b feature/new-login ../feature-login` |
+    | `git worktree add <path> <commit-ish>`      | 在指定路径创建一个新的工作树，检出特定的提交（可以是分离HEAD状态）          | `git worktree add ../v1.0-review v1.0`           |
+    | `git worktree remove <path>`                | 移除指定路径的工作树                                                           | `git worktree remove ../bugfix-123`               |
+    | `git worktree prune`                        | 清理不再存在的工作树的元数据                                                  | `git worktree prune`                              |
+    | `git worktree move <path> <new-path>`       | 将工作树移动到新的路径                                                         | `git worktree move ../bugfix-123 ../active-bugfix` |
+    | `git worktree lock <path>`                  | 锁定工作树以防止被自动删除                                                     | `git worktree lock ../important-feature`          |
+    | `git worktree unlock <path>`                | 解除工作树锁定                                                                 | `git worktree unlock ../important-feature`        |
 
 ### E. 自动化工作流：Git Hooks
 
@@ -585,35 +825,6 @@ Git 不仅仅是一个版本控制工具，它所提供的各种机制和推荐�
     *   **元数据丢失**: 使用 `squash` 或 `fixup` 操作合并提交时，那些被合并的原始提交的作者、日期等元数据信息可能会丢失。**解决方案**：你可以在合并后的新提交的提交信息中，手动记录下那些重要的原始信息；或者，接受这作为 rebase 清理历史所带来的一个代价。
     *   **Rebase 共享历史 (再次强调)**: 这是使用 rebase 时最严重、最应该避免的错误！**解决方案**：绝对禁止对那些已经被推送到共享仓库的分支进行 rebase 操作。如果你需要将共享分支的更改整合到你的当前分支，请使用 `git merge`。
 *   **Git 的复杂性与学习曲线**: 我们必须承认，Git 本身的强大功能也带来了相应的复杂性。许多所谓的“陷阱”，实际上往往源于开发者对其内部核心模型（例如对象、指针、索引等）或者某些命令的副作用理解不够深入。持续地学习、不断地实践，并努力去理解每个命令背后的“为什么”，是克服这些挑战的关键所在。
-
-### C. 开发者必备的 Git 安全实践
-
-*   **严禁提交敏感信息**: 永远、永远不要将 API 密钥、数据库密码、私钥证书、包含敏感信息的配置文件（例如 `.env` 文件、包含生产环境凭证的 `config.prod.json` 等）直接提交到你的 Git 仓库中！Git 会永久地记录下所有的历史版本，即使你在后续的提交中删除了这些文件，那些敏感信息依然可以通过查阅历史记录而被轻易访问到。
-*   **用好 `.gitignore`**: 这是你防止意外提交敏感信息的第一道防线。确保你的 `.gitignore` 文件配置正确，能够有效地忽略所有包含敏感信息的文件（例如 `.env`, `*.pem`, `config.prod.json` 等）、各种临时文件、编译产生的文件、日志文件等等。
-*   **谨慎使用通配符 `add`**: 尽量避免不加思考地使用像 `git add *` 或 `git add .` 这样的命令，因为这很容易会将那些本应该被忽略的敏感文件意外地添加到暂存区。在每次提交之前，务必养成使用 `git status` 和 `git diff --staged` 来仔细检查暂存区内容的习惯。
-*   **自动化秘密扫描**: 不要完全依赖人工的代码评审来发现项目中可能存在的秘密信息。你应该在你的 CI/CD 流水线中，或者使用 pre-commit hook，集成一些自动化的秘密扫描工具（例如 GitGuardian, truffleHog, gitleaks 等）。这些工具能够在秘密信息被提交或推送到远程仓库之前就及时地检测出来，从而避免潜在的泄露风险。
-*   **安全的秘密管理方案**:
-    *   **环境变量**: 将秘密信息存储在环境变量中，让你的应用程序在运行时从环境变量中读取。这是一种相对简单易行的方法，但你需要妥善管理好服务器或部署环境中的这些环境变量。
-    *   **秘密管理服务**: 考虑使用专业的秘密管理工具（例如 HashiCorp Vault, AWS Secrets Manager, Azure Key Vault, Google Secret Manager 等）来集中存储和安全地分发你的秘密信息。这通常是企业级应用推荐的解决方案。
-    *   **加密存储**: 你也可以使用像 `git-secret` 或 `sops` 这样的工具，先将包含敏感信息的文件进行加密，然后再将加密后的文件提交到 Git 仓库中。这样，只有拥有相应解密密钥的协作者才能访问这些文件的原始内容。这种方法比较适用于那些需要在团队成员之间同步某些配置文件的场景。
-*   **遵循最小权限原则**: 为你的 API 密钥、服务账户等配置尽可能小的权限范围，确保它们只拥有完成其必要功能所需的最小权限。使用有时效性的短期凭证（例如 OIDC 令牌）通常比使用长期有效的静态密钥更为安全。
-*   **历史记录清理 (下策)**: 如果不幸地，你还是将秘密信息提交到了 Git 的历史记录中，那么简单的 `git rm` 操作和一次新的提交是无法彻底移除这些信息的。你必须通过重写历史的方式才能将其彻底清除。你可以考虑使用 `git filter-repo` 工具（这是目前推荐的工具）或者 BFG Repo-Cleaner。但请注意，重写历史是一个非常复杂且具有破坏性的操作，尤其是在共享的仓库中进行时，需要所有协作者都进行配合来更新他们本地的仓库。因此，**预防永远是关键！**
-
-## 不断提升自身 Git 技能水平
-
-Git 作为现代软件开发的基石，其所蕴含的强大功能远不止于简单的版本记录。这份指南深入探讨了 Git 的核心机制、常用命令的一些精妙用法、应对复杂场景的高级技术、适应不同团队需求的协作工作流、维护代码质量的最佳实践，以及那些需要我们时刻警惕的常见陷阱和重要的安全规范。
-
-掌握 Git 的过程，本质上是理解其底层对象模型和指针操作原理的过程，而并非仅仅是机械地记忆命令。真正理解 `git add -p` 如何帮助我们构建出具有原子性的提交，`git log` 丰富的选项如何让我们洞察历史的脉络，以及 `git reflog` 如何在我们操作失误时成为一道可靠的安全网，这些才是提升效率的关键所在。
-
-诸如 `git rebase`（尤其是交互式 rebase）、`git cherry-pick`、`git bisect`、`git worktree` 和 Git Hooks 这样的高级技术，为我们提供了无与伦比的灵活性和控制力，但同时也伴随着更高的复杂性和潜在的风险。能够明智地使用这些工具——例如，深刻理解 rebase 对共享历史可能带来的危险性，或者意识到 `cherry-pick` 操作可能导致的重复提交问题——正是区分一个熟练的 Git 使用者和一个 Git 专家的标志。而像 `git rerere` 这样的工具，则能在特定的场景下显著地减少我们重复性的劳动。
-
-选择一个合适的分支策略（无论是 Git Flow、GitHub Flow、GitLab Flow 还是主干开发），并将其与你的 CI/CD 流水线有效地集成起来，对于保障团队的协作效率和发布的节奏来说至关重要。没有一种分支策略是绝对最优的，你的选择应该基于项目的具体规模、团队的开发习惯、产品的发布需求，以及团队在自动化测试方面的投入程度来综合考量。
-
-维护一个干净、原子化、并且信息丰富的提交历史，不仅能使你的代码库更易于理解和维护，还能直接提升代码评审的效率，并增强像 `git bisect` 这类调试工具的效果。采用像 Conventional Commits 这样的提交规范，是实现这一目标的有效途径。
-
-最后，安全意识是使用 Git 时不可或缺的一环。永远不要将敏感信息提交到你的仓库中，并积极利用 `.gitignore` 文件和自动化的秘密扫描工具来进行预防，这是每个开发者都必须遵守的基本原则。
-
-学习 Git 是一个持续不断的过程。精通 Git 意味着你不仅掌握了技术层面的细节，更重要的是培养了在特定的项目和团队背景下做出明智决策的判断力，养成良好的版本控制习惯，并将其深度融入到整个软件开发的生命周期之中。我们鼓励所有的开发者继续探索 Git 更深层次的功能，在安全的环境中大胆地进行实验，并积极利用官方文档和丰富的社区资源，来不断提升自己的技能水平。
 
 **推荐资源**:
 
