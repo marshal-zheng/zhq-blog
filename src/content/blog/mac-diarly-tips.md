@@ -86,3 +86,10 @@ system_profiler SPHardwareDataType SPSoftwareDataType SPDisplaysDataType
 ```bash
 HOMEBREW_NO_AUTO_UPDATE=1 brew install llama.cpp --verbose
 ```
+
+#### 设置终端代理环境
+
+```bash
+export https_proxy=http://127.0.0.1:4780 http_proxy=http://127.0.0.1:4780 all_proxy=socks5://127.0.0.1:4781
+```
+> 此命令为当前终端会话设置HTTP、HTTPS和SOCKS代理，使网络请求通过指定的代理服务器。
