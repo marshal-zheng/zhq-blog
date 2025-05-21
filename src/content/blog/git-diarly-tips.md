@@ -189,6 +189,41 @@ git log --oneline | grep -q "更新 node pnpm 依赖版本，避免前端编译�
 git stash push -m "stash message" path/to/your/file
 ```
 
+#### 从指定提交还原多个文件到上一版本
+
+```bash
+git checkout HEAD~1 -- path/to/file1 path/to/file2
+```
+
+#### 从特定提交哈希值还原文件
+
+```bash
+git checkout a1b2c3d -- path/to/file1 path/to/file2
+```
+
+#### 从特定提交还原整个目录
+
+```bash
+git checkout a1b2c3d -- src/components/
+```
+
+#### 还原文件到指定提交之前的版本
+
+```bash
+git checkout <commit-id>^ -- path/to/file1 path/to/file2
+git commit -m "还原 path/to/file1 和 path/to/file2 到提交 <commit-id> 之前的版本"
+```
+> 💡 Tips: 命令中的 `^` 符号表示指定提交的父提交（即前一个版本）。这种方法在您知道具体哪个提交引入了不需要的更改，并希望精确地将特定文件恢复到那个更改之前的状态时特别有用。
+
+#### 使用 git restore 还原文件到特定提交版本
+
+```bash
+git restore --source=<commit-id>^ -- path/to/file1 path/to/file2
+git add path/to/file1 path/to/file2
+git commit -m "还原 path/to/file1 和 path/to/file2 到提交 <commit-id> 之前的版本"
+```
+> 💡 Tips: 这个方法使用 `git restore` 命令而不是 `git checkout`，这是 Git 2.23 版本引入的更现代化的方式，更加明确地表达还原文件的意图。
+
 
 
 
