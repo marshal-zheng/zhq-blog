@@ -6,7 +6,7 @@ featured: false
 draft: false
 tags:
   - Git
-  - '高效开发'
+  - 'productivity'
 description: '记录日常开发中git常用命令。'
 ---
 

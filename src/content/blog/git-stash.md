@@ -6,7 +6,7 @@ featured: false
 draft: false
 tags:
   - Git
-  - '高效开发'
+  - 'productivity'
 description: 'git status、git add、交互式暂存(-p)、撤销暂存和丢弃修改等核心操作，帮助开发者创建更清晰、原子化的提交历史。'
 ---
 

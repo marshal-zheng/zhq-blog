@@ -6,7 +6,7 @@ featured: false
 draft: false
 tags:
   - Python
-  - '高效开发'
+  - 'productivity'
 description: '记录日常开发中python常用。'
 ---
 
