@@ -5,7 +5,7 @@ title: '减脂增肌'
 featured: false
 draft: false
 tags:
-  - '健身'
+  - 'fitness'
 description: '根据自身情况制定为期一个月的减脂增肌计划。'
 ---
 
