@@ -6,7 +6,6 @@ featured: false
 draft: false
 tags:
   - 'Git'
-  - 'Version Control'
 description: 'AI Reserch之git使用。'
 ---
 
