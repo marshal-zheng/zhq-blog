@@ -9,6 +9,11 @@ tags:
   - 'productivity'
 description: '常用docker命令。'
 ---
+#### 查看Docker镜像中定义的环境变量
+
+```bash
+docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' <镜像名:标签>
+```
 
 #### 查看容器内环境变量（实时查看）
 
