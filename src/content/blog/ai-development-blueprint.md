@@ -5,7 +5,6 @@ title: 'AI 开发蓝图：提升代码生成质量的实践'
 featured: false
 tags:
   - 'AI'
-  - '开发'
 description: '探索如何通过结构化的编码文档指导 AI 辅助代码生成，显著提升输出质量和稳定性。'
 ---
 
