@@ -2,7 +2,7 @@
 author: ZHQ
 pubDatetime: 2025-06-03T19:45:00+08:00
 title: "Frappe研究报告"
-featured: true
+featured: false
 draft: false
 tags:
   - 'tech'
