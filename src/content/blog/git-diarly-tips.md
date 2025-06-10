@@ -61,6 +61,13 @@ git log -S "search_string"
 git log --since="2022-04-01" --until="2022-05-01"
 ```
 
+#### 精准查某天提交，并标注出它在哪些分支上
+
+```bash
+git log --all --since="2025-01-15" --until="2025-01-15 23:59" \
+--pretty=format:"%h | %d | %an | %ad | %s" --date=short
+```
+
 #### 查看今天的提交记录
 
 ```bash
