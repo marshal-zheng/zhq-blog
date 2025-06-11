@@ -5,7 +5,7 @@ title: '记一次 Linux OOM Killer 引发的服务中断排查全流程'
 featured: false
 draft: false
 tags:
-  - 'daily digest'
+  - 'DevOps'
 description: '2025-05-10 信息摘要信息'
 ---
 
