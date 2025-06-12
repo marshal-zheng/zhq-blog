@@ -6,7 +6,7 @@ featured: false
 draft: false
 tags:
   - 'DevOps'
-description: '2025-05-10 信息摘要信息'
+description: '记录一次生产环境中 Node.js 服务被 Linux OOM Killer 终止的完整排查过程'
 ---
 
 最近在对 `make/plane` 这个项目做二次开发，不得不说，这个项目确实有点分量。手里的 MacBook Pro 内存吃紧，在本地跑起来之后风扇狂转，开发体验非常卡顿。为了提升效率，干脆把开发环境挪到了公司的一台大内存服务器上，用远程 IDE 来写代码。
