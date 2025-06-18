@@ -231,32 +231,6 @@ git commit -m "还原 path/to/file1 和 path/to/file2 到提交 <commit-id> 之�
 ```
 > 💡 Tips: 这个方法使用 `git restore` 命令而不是 `git checkout`，这是 Git 2.23 版本引入的更现代化的方式，更加明确地表达还原文件的意图。
 
-#### 批量删除镜像（匹配 wps-addon）
-
-```bash
-docker images | grep wps-addon | awk '{print $3}' | xargs -r docker rmi -f
-```
-
-#### 批量删除容器（匹配 wps-addon）
-
-```bash
-docker ps | grep wps-addon | awk '{print $1}' | xargs -r docker rm -f
-```
-
-#### 查看运行容器的环境变量
-
-```bash
-docker exec <container_name_or_id> env
-```
-
-
-#### socker inspect查看镜像
-
-```bash
-docker inspect --format='{{range .Config.Env}}{{println .}}{{end}}' <container_name_or_id>
-```
-
-
 
 
 

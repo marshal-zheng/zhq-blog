@@ -63,3 +63,16 @@ docker container prune
 ```bash
 docker rm -f $(docker ps -aq)
 ```
+
+
+#### 批量删除镜像（匹配 wps-addon）
+
+```bash
+docker images | grep wps-addon | awk '{print $3}' | xargs -r docker rmi -f
+```
+
+#### 批量删除容器（匹配 wps-addon）
+
+```bash
+docker ps | grep wps-addon | awk '{print $1}' | xargs -r docker rm -f
+```
