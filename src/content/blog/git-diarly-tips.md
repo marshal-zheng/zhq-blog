@@ -231,6 +231,11 @@ git commit -m "还原 path/to/file1 和 path/to/file2 到提交 <commit-id> 之�
 ```
 > 💡 Tips: 这个方法使用 `git restore` 命令而不是 `git checkout`，这是 Git 2.23 版本引入的更现代化的方式，更加明确地表达还原文件的意图。
 
+#### 查找提交信息中包含“存储卷列表”的提交
+
+```bash
+git log --pretty=format:"%h %s" | grep "存储卷列表"
+```
 
 
 

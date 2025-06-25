@@ -76,3 +76,21 @@ docker images | grep wps-addon | awk '{print $3}' | xargs -r docker rmi -f
 ```bash
 docker ps | grep wps-addon | awk '{print $1}' | xargs -r docker rm -f
 ```
+
+#### 查看镜像架构
+
+```bash
+ocker image inspect <镜像名> --format='{{.Architecture}}'
+```
+
+#### 保存镜像为 .tar 文件
+
+```bash
+docker save -o 文件名.tar imageId
+```
+
+#### 上传 .tar 文件到 0.67 服务器（使用 scp）
+
+```bash
+scp wps-addon.tar root@192.168.6.67:/data/
+```
