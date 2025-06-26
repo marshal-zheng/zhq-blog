@@ -8,7 +8,6 @@ const FloatingRobot: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // 检查是否为移动设备
     const checkIsMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
@@ -16,7 +15,6 @@ const FloatingRobot: React.FC = () => {
     checkIsMobile();
     window.addEventListener('resize', checkIsMobile);
 
-    // 延迟显示，避免页面加载时突兀出现
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 1000);
@@ -38,12 +36,12 @@ const FloatingRobot: React.FC = () => {
   return (
     <div
       className={`
-        fixed bottom-4 right-4 z-[60]
+        fixed bottom-8 right-6 z-[60]
         transition-all duration-300 ease-out
         cursor-pointer
         group
         pointer-events-auto
-        ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}
+        ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0'}
       `}
       data-no-splash="true"
       onMouseEnter={() => setIsHovered(true)}
@@ -58,7 +56,7 @@ const FloatingRobot: React.FC = () => {
       {/* 机器人容器 */}
       <div
         className={`
-          relative w-24 h-24 rounded-full 
+          relative w-[80px] h-[80px] rounded-full 
           overflow-hidden
           transform transition-all duration-300 ease-out
           ${isHovered
