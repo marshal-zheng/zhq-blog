@@ -27,22 +27,18 @@ const FloatingRobot: React.FC = () => {
     };
   }, []);
 
-  // 移动设备不显示
   if (isMobile || !isVisible) {
     return null;
   }
 
   const handleClick = () => {
-    // 可以在这里添加点击事件，比如打开聊天窗口或跳转到联系页面
     console.log('Robot clicked!');
-    // 示例：跳转到关于页面
-    window.location.href = '/about';
   };
 
   return (
     <div
       className={`
-        fixed bottom-6 right-6 z-[60]
+        fixed bottom-4 right-4 z-[60]
         transition-all duration-300 ease-out
         cursor-pointer
         group
@@ -104,21 +100,6 @@ const FloatingRobot: React.FC = () => {
         </Suspense>
       </div>
 
-      {/* 悬停提示 */}
-      <div
-        className={`
-          absolute -bottom-8 left-1/2 transform -translate-x-1/2
-          px-2 py-1 bg-black/80 text-white text-xs rounded
-          transition-all duration-200 ease-out
-          whitespace-nowrap
-          ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}
-        `}
-      >
-        点击了解更多
-        <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full">
-          <div className="w-0 h-0 border-l-4 border-r-4 border-b-4 border-transparent border-b-black/80"></div>
-        </div>
-      </div>
     </div>
   );
 };
