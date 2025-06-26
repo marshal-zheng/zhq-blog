@@ -10,6 +10,7 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import mdx from '@astrojs/mdx'
 import fs from 'node:fs';
+import path from 'path';
 
 // https://astro.build/config
 export default defineConfig({
@@ -53,6 +54,11 @@ export default defineConfig({
     optimizeDeps: {
       exclude: ["@resvg/resvg-js"],
       include: ["@splinetool/runtime"]
+    },
+    resolve: {
+      alias: {
+        '@': path.resolve('./src'),
+      },
     },
     server: {
       // https: {

@@ -17,6 +17,7 @@ export interface Props {
   pubDatetime?: Date;
   modDatetime?: Date | null;
   scrollSmooth?: boolean;
+  assistantMode?: 'fullscreen' | 'bubble';
 }
 
 const {
@@ -29,6 +30,7 @@ const {
   pubDatetime,
   modDatetime,
   scrollSmooth = false,
+  assistantMode = 'buble',
 } = Astro.props;
 
 const currentPath = Astro.url.pathname;
@@ -124,7 +126,7 @@ const structuredData = {
   </head>
   <body class="relative">
     {!isPostDetail && <SplashCursor client:load />}
-    <FloatingRobot client:load />
+    <FloatingRobot client:load mode={assistantMode} />
     <slot />
   </body>
 </html>
