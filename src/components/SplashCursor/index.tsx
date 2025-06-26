@@ -29,12 +29,6 @@ function SplashCursor({
   const [isPostDetail, setIsPostDetail] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  if (isMobile || isPostDetail) {
-    return null;
-  }
-
-
-
   useEffect(() => {
     // 检查是否为移动设备
     if (typeof window !== 'undefined' && window.isMobileDevice) {
@@ -54,6 +48,7 @@ function SplashCursor({
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    // @ts-ignore
     function pointerPrototype() {
       this.id = -1;
       this.texcoordX = 0;
@@ -1185,34 +1180,46 @@ function SplashCursor({
       return hash;
     }
 
-    window.addEventListener("mousedown", (e) => {
+    // 由于canvas设置了pointer-events: none，我们需要在文档级别监听事件
+    // 但是我们要避免干扰其他组件的交互，所以只在空白区域触发效果
+    let isInitialized = false;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      // 检查是否点击在特定元素上（如FloatingRobot）
+      const target = e.target as HTMLElement;
+      if (target.closest('[data-no-splash]') || target.closest('.spline-container')) {
+        return; // 如果在特定元素上，不触发流体效果
+      }
+
+      const pointer = pointers[0];
+      const posX = scaleByPixelRatio(e.clientX);
+      const posY = scaleByPixelRatio(e.clientY);
+      const color = pointer.color || generateColor();
+
+      if (!isInitialized) {
+        updateFrame(); // start animation loop
+        isInitialized = true;
+      }
+
+      updatePointerMoveData(pointer, posX, posY, color);
+    };
+
+    const handleMouseDown = (e: MouseEvent) => {
+      // 检查是否点击在特定元素上
+      const target = e.target as HTMLElement;
+      if (target.closest('[data-no-splash]') || target.closest('.spline-container')) {
+        return;
+      }
+
       const pointer = pointers[0];
       const posX = scaleByPixelRatio(e.clientX);
       const posY = scaleByPixelRatio(e.clientY);
       updatePointerDownData(pointer, -1, posX, posY);
       clickSplat(pointer);
-    });
+    };
 
-    document.body.addEventListener(
-      "mousemove",
-      function handleFirstMouseMove(e) {
-        const pointer = pointers[0];
-        const posX = scaleByPixelRatio(e.clientX);
-        const posY = scaleByPixelRatio(e.clientY);
-        const color = generateColor();
-        updateFrame(); // start animation loop
-        updatePointerMoveData(pointer, posX, posY, color);
-        document.body.removeEventListener("mousemove", handleFirstMouseMove);
-      }
-    );
-
-    window.addEventListener("mousemove", (e) => {
-      const pointer = pointers[0];
-      const posX = scaleByPixelRatio(e.clientX);
-      const posY = scaleByPixelRatio(e.clientY);
-      const color = pointer.color;
-      updatePointerMoveData(pointer, posX, posY, color);
-    });
+    document.addEventListener("mousedown", handleMouseDown);
+    document.addEventListener("mousemove", handleMouseMove);
 
     document.body.addEventListener(
       "touchstart",
@@ -1280,9 +1287,14 @@ function SplashCursor({
     TRANSPARENT,
   ]);
 
+  // 在所有 hooks 调用之后进行条件返回
+  if (isMobile || isPostDetail) {
+    return null;
+  }
+
   return (
     <div className="fixed top-0 left-0 z-40 pointer-events-none">
-      <canvas ref={canvasRef} id="fluid" className="w-screen h-screen" />
+      <canvas ref={canvasRef} id="fluid" className="w-screen h-screen pointer-events-none" />
     </div>
   );
 }
