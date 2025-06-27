@@ -12,6 +12,7 @@ import {
   CheckIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
+  CircleStop,
   CopyIcon,
   PencilIcon,
   RefreshCwIcon,
@@ -31,7 +32,7 @@ export const Thread: FC = () => {
         ["--thread-max-width" as string]: "42rem",
       }}
     >
-      <ThreadPrimitive.Viewport className="flex h-full flex-col items-center overflow-y-scroll scroll-smooth bg-inherit px-4 pt-8">
+      <ThreadPrimitive.Viewport className="flex h-full w-full flex-col items-center overflow-y-auto scroll-smooth bg-inherit px-4">
         <ThreadWelcome />
 
         <ThreadPrimitive.Messages
@@ -75,7 +76,7 @@ const ThreadWelcome: FC = () => {
       <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col">
         <div className="flex w-full flex-grow flex-col items-center justify-center">
           <p className="mt-4 font-medium">
-            今天我可以为您做些什么？
+            我可以为您做些什么？
           </p>
         </div>
       </div>
@@ -118,7 +119,7 @@ const ComposerAction: FC = () => {
             variant="default"
             className="my-2.5 size-8 p-2 transition-opacity ease-in"
           >
-            <CircleStopIcon />
+            <CircleStop />
           </TooltipIconButton>
         </ComposerPrimitive.Cancel>
       </ThreadPrimitive.If>
@@ -252,16 +253,4 @@ const BranchPicker: FC<BranchPickerPrimitive.Root.Props> = ({
   );
 };
 
-const CircleStopIcon = () => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 16 16"
-      fill="currentColor"
-      width="16"
-      height="16"
-    >
-      <rect width="10" height="10" x="3" y="3" rx="2" />
-    </svg>
-  );
-};
+
