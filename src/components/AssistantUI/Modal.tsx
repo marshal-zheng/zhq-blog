@@ -10,7 +10,7 @@ const AssistantPopover: React.FC = () => {
 
   return (
     <AssistantRuntimeProvider runtime={runtime}>
-      <div className="h-full">
+      <div className="h-full bg-transparent">
         <Thread />
       </div>
     </AssistantRuntimeProvider>

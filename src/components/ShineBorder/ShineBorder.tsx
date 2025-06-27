@@ -42,24 +42,61 @@ function ShineBorder({
     return `${borderRadius}px`;
   };
 
+  // 生成唯一的动画ID
+  const animationId = `shine-pulse-${Math.random().toString(36).substr(2, 9)}`;
+  
+  // 动画关键帧
+  const keyframes = `
+    @keyframes ${animationId} {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
+    }
+  `;
+
+  const containerStyle = {
+    ...style,
+    position: 'relative' as const,
+    padding: `${borderWidth}px`,
+    borderRadius: getBorderRadius(),
+    background: 'transparent',
+  };
+
+  const beforeStyle = {
+    content: '""',
+    position: 'absolute' as const,
+    inset: 0,
+    padding: `${borderWidth}px`,
+    background: `radial-gradient(transparent,transparent, ${color instanceof Array ? color.join(",") : color},transparent,transparent)`,
+    backgroundSize: '300% 300%',
+    backgroundPosition: '0% 0%',
+    animation: `${animationId} ${duration}s infinite`,
+    borderRadius: 'inherit',
+    WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+    mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
+    WebkitMaskComposite: 'xor',
+    maskComposite: 'exclude',
+    zIndex: -1,
+  };
+
   return (
-    <div
-      style={{
-        ...style,
-        "--border-radius": getBorderRadius(),
-        "--border-width": `${borderWidth}px`,
-        "--shine-pulse-duration": `${duration}s`,
-        "--mask-linear-gradient": `linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)`,
-        "--background-radial-gradient": `radial-gradient(transparent,transparent, ${color instanceof Array ? color.join(",") : color},transparent,transparent)`,
-        borderRadius: getBorderRadius(),
-      } as React.CSSProperties}
-      className={clsx(
-        "relative h-full w-full bg-transparent p-0 shine-border",
-        className,
-      )}
-    >
-      {children}
-    </div>
+    <>
+      <style>{keyframes}</style>
+      <div
+        style={containerStyle}
+        className={clsx(className)}
+      >
+        <div style={beforeStyle} />
+        <div 
+          className="relative z-10 h-full w-full"
+          style={{
+            borderRadius: `calc(${getBorderRadius()} - ${borderWidth}px)`,
+          }}
+        >
+          {children}
+        </div>
+      </div>
+    </>
   );
 }
 

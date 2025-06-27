@@ -27,12 +27,12 @@ import { TooltipIconButton } from "./TooltipIconButton";
 export const Thread: FC = () => {
   return (
     <ThreadPrimitive.Root
-      className="bg-background box-border flex h-full flex-col overflow-hidden"
+      className="bg-transparent box-border flex h-full flex-col overflow-hidden"
       style={{
         ["--thread-max-width" as string]: "42rem",
       }}
     >
-      <ThreadPrimitive.Viewport className="flex h-full w-full flex-col items-center overflow-y-auto scroll-smooth bg-inherit px-4">
+      <ThreadPrimitive.Viewport className="flex flex-1 h-full w-full flex-col items-center overflow-y-auto scroll-smooth bg-inherit px-4">
         <ThreadWelcome />
 
         <ThreadPrimitive.Messages
@@ -75,7 +75,7 @@ const ThreadWelcome: FC = () => {
     <ThreadPrimitive.Empty>
       <div className="flex w-full max-w-[var(--thread-max-width)] flex-grow flex-col">
         <div className="flex w-full flex-grow flex-col items-center justify-center">
-          <p className="mt-4 font-medium">
+          <p className="mt-4 font-medium text-gray-800 dark:text-gray-200" style={{color: 'inherit'}}>
             我可以为您做些什么？
           </p>
         </div>
@@ -86,12 +86,12 @@ const ThreadWelcome: FC = () => {
 
 const Composer: FC = () => {
   return (
-    <ComposerPrimitive.Root className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-lg border bg-inherit px-2.5 shadow-sm transition-colors ease-in">
+    <ComposerPrimitive.Root className="focus-within:border-ring/20 flex w-full flex-wrap items-end rounded-lg border bg-white/80 dark:bg-gray-800/80 px-2.5 shadow-sm transition-colors ease-in">
       <ComposerPrimitive.Input
         rows={1}
         autoFocus
         placeholder="输入消息..."
-        className="placeholder:text-muted-foreground max-h-40 flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm outline-none focus:ring-0 disabled:cursor-not-allowed"
+        className="placeholder:text-gray-500 dark:placeholder:text-gray-400 max-h-40 flex-grow resize-none border-none bg-transparent px-2 py-4 text-sm text-gray-900 dark:text-gray-100 outline-none focus:ring-0 disabled:cursor-not-allowed"
       />
       <ComposerAction />
     </ComposerPrimitive.Root>
