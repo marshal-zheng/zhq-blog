@@ -2,6 +2,11 @@ import React, { useState, useEffect, Suspense, lazy, useRef, useCallback } from 
 import AssistantPopover from './AssistantUI/Modal';
 import { ShineBorder } from './ShineBorder/ShineBorder';
 
+// === Bubble modal geometry ===
+const BUBBLE_WIDTH = 430;    // 与样式保持一致
+const BUBBLE_HEIGHT = 580;   // 与样式保持一致
+const TOOLBAR_OFFSET = 110;  // toolbar 顶部到容器 top 的偏移量
+
 const Spline = lazy(() => import('@splinetool/react-spline'));
 
 interface FloatingRobotProps {
@@ -50,14 +55,17 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
       
       // 如果是气泡模式且有位置信息，重新计算边界
       if (currentMode === 'bubble' && (bubblePosition.x !== 0 || bubblePosition.y !== 0)) {
-        const bubbleWidth = 430;
-        const bubbleHeight = 550;
+        const bubbleWidth = BUBBLE_WIDTH;
+        const bubbleHeight = BUBBLE_HEIGHT;
         const padding = 10;
         
         const maxX = Math.max(0, window.innerWidth - bubbleWidth - padding);
-        const maxY = Math.max(0, window.innerHeight - bubbleHeight - padding);
+        // const maxY = Math.max(0, window.innerHeight - bubbleHeight - padding);
+        // const minX = padding;
+        // const minY = padding;
         const minX = padding;
-        const minY = padding;
+        const minY = TOOLBAR_OFFSET; // 顶部最小值，保证 top ≥ 0
+        const maxY = Math.max(0, window.innerHeight - (bubbleHeight - TOOLBAR_OFFSET));
         
         const newX = Math.max(minX, Math.min(bubblePosition.x, maxX));
         const newY = Math.max(minY, Math.min(bubblePosition.y, maxY));
@@ -107,8 +115,8 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
   const getDefaultPosition = useCallback(() => {
     if (typeof window === 'undefined') return { x: 0, y: 0 };
     
-    const bubbleWidth = 430;
-    const bubbleHeight = 550;
+    const bubbleWidth = BUBBLE_WIDTH;
+    const bubbleHeight = BUBBLE_HEIGHT;
     const padding = 30; // 增加边距到30px，避免太贴边
     
     // 默认位置放在右下角，但保持足够边距
@@ -124,14 +132,17 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
   // 优化的位置更新函数
   const updatePosition = useCallback((newX: number, newY: number) => {
     // 边界检测 - 确保气泡完全在视口内
-    const bubbleWidth = 430;
-    const bubbleHeight = 550;
-    const padding = 10; // 添加一点边距避免贴边
-    
-    const maxX = Math.max(0, window.innerWidth - bubbleWidth - padding);
-    const maxY = Math.max(0, window.innerHeight - bubbleHeight - padding);
-    const minX = padding;
-    const minY = padding;
+    const bubbleWidth = BUBBLE_WIDTH;
+
+    // X轴边界：左右两边留10px边距
+    const maxX = Math.max(0, window.innerWidth - BUBBLE_WIDTH - 10);
+    const minX = 10;
+
+    // 计算允许的最大/最小 Y  
+    // top = position.y - TOOLBAR_OFFSET  
+    // 要保证 top ≥ 0 ⇒ position.y ≥ TOOLBAR_OFFSET
+    const minY = TOOLBAR_OFFSET;
+    const maxY = window.innerHeight - (BUBBLE_HEIGHT - TOOLBAR_OFFSET);
 
     const clampedX = Math.max(minX, Math.min(newX, maxX));
     const clampedY = Math.max(minY, Math.min(newY, maxY));
@@ -369,9 +380,9 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
         data-no-splash="true"
         style={{
           left: `${position.x}px`,
-          top: `${position.y -100}px`,
-          width: '430px',
-          height: '550px'
+          top: `${position.y - TOOLBAR_OFFSET}px`,
+          width: `${BUBBLE_WIDTH}px`,
+          height: `${BUBBLE_HEIGHT}px`
         }}
       >
         <div
@@ -385,7 +396,7 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
           <ShineBorder
             borderWidth={3}
             borderRadius={12}
-            duration={140}
+            duration={135}
             className="h-full w-full shadow-2xl"
             color={["#FF007F", "#39FF14", "#00FFFF"]}
             style={{
