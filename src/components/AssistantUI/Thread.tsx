@@ -58,11 +58,12 @@ export const Thread: FC = () => {
           <ThreadPrimitive.If empty={false}>
             <div className="min-h-4 flex-grow" />
           </ThreadPrimitive.If>
+        </div>
 
-          <div className="sticky bottom-0 mt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-xl bg-inherit">
-            <ThreadScrollToBottom />
-            <Composer />
-          </div>
+        {/* 输入框固定在底部 */}
+        <div className="sticky bottom-0 mt-auto flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end bg-inherit px-3 pb-3">
+          <ThreadScrollToBottom />
+          <Composer />
         </div>
       </ThreadPrimitive.Viewport>
     </ThreadPrimitive.Root>
@@ -107,12 +108,12 @@ const ThreadWelcome: FC = () => {
 
 const Composer: FC = () => {
   return (
-    <ComposerPrimitive.Root className="focus-within:border-blue-400/50 focus-within:ring-2 focus-within:ring-blue-400/20 flex w-full flex-wrap items-end rounded-xl border border-gray-200/60 dark:border-gray-700/60 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-2 shadow-sm transition-all duration-200 ease-out">
+    <ComposerPrimitive.Root className="focus-within:border-blue-400/50 focus-within:ring-2 focus-within:ring-blue-400/20 flex w-full flex-wrap items-center rounded-xl border border-gray-200/60 dark:border-gray-700/60 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-1.5 shadow-sm transition-all duration-200 ease-out">
       <ComposerPrimitive.Input
         rows={1}
         autoFocus
         placeholder="输入您的问题..."
-        className="placeholder:text-gray-500 dark:placeholder:text-gray-400 max-h-24 flex-grow resize-none border-none bg-transparent px-2 py-1.5 text-sm text-gray-900 dark:text-gray-100 outline-none focus:ring-0 disabled:cursor-not-allowed font-medium leading-relaxed"
+        className="placeholder:text-gray-500 dark:placeholder:text-gray-400 max-h-24 flex-grow resize-none border-none bg-transparent px-2 py-1 text-sm text-gray-900 dark:text-gray-100 outline-none focus:ring-0 disabled:cursor-not-allowed font-medium leading-relaxed"
       />
       <ComposerAction />
     </ComposerPrimitive.Root>
@@ -127,7 +128,7 @@ const ComposerAction: FC = () => {
           <TooltipIconButton
             tooltip="发送消息"
             variant="default"
-            className="my-1 size-7 p-1 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200 ease-out hover:scale-105 shadow-sm"
+            className="ml-1 size-8 p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-all duration-200 ease-out hover:scale-105 shadow-sm"
           >
             <SendHorizontalIcon size={20} />
           </TooltipIconButton>
@@ -138,9 +139,9 @@ const ComposerAction: FC = () => {
           <TooltipIconButton
             tooltip="停止生成"
             variant="default"
-            className="my-1 size-7 p-1 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all duration-200 ease-out hover:scale-105 shadow-sm"
+            className="ml-1 size-9 p-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-all duration-200 ease-out hover:scale-105 shadow-sm"
           >
-            <CircleStop size={14} />
+            <CircleStop size={16} />
           </TooltipIconButton>
         </ComposerPrimitive.Cancel>
       </ThreadPrimitive.If>
@@ -153,7 +154,7 @@ const UserMessage: FC = () => {
     <MessagePrimitive.Root className="grid auto-rows-auto grid-cols-[minmax(72px,1fr)_auto] gap-y-2 [&:where(>*)]:col-start-2 w-full max-w-[var(--thread-max-width)] py-4">
       <UserActionBar />
 
-      <div className="bg-blue-500 hover:bg-blue-600 text-white max-w-[calc(var(--thread-max-width)*0.7)] break-words rounded-2xl rounded-br-sm px-4 py-3 col-start-2 row-start-2 shadow-sm font-normal leading-relaxed transition-colors duration-150">
+      <div className="bg-blue-500 hover:bg-blue-600 text-white max-w-[calc(var(--thread-max-width)*0.7)] break-words rounded-2xl rounded-br-sm px-3.5 py-2 col-start-2 row-start-2 shadow-sm font-normal leading-relaxed transition-colors duration-150">
         <MessagePrimitive.Content />
       </div>
 
