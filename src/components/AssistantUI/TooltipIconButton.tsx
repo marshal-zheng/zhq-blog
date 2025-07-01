@@ -21,6 +21,21 @@ export const TooltipIconButton = forwardRef<
   HTMLButtonElement,
   TooltipIconButtonProps
 >(({ children, tooltip, side = "bottom", className, ...rest }, ref) => {
+  // 如果没有 tooltip 内容，直接返回按钮而不包装 Tooltip
+  if (!tooltip) {
+    return (
+      <Button
+        variant="ghost"
+        size="icon"
+        {...rest}
+        className={cn("aui-button-icon", className)}
+        ref={ref}
+      >
+        {children}
+      </Button>
+    );
+  }
+
   return (
     <TooltipProvider delayDuration={300}>
       <Tooltip>

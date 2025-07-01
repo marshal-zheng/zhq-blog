@@ -34,6 +34,13 @@ export interface ChatRequest {
 export interface ChatResponse {
   content?: string;
   error?: string;
+  errorDetails?: {
+    code?: string | number;
+    type?: string;
+    statusCode?: number;
+    message?: string;
+    suggestions?: string[];
+  };
   model?: string;
   usage?: {
     promptTokens: number;
@@ -131,16 +138,120 @@ export class ApiAdapterService {
    */
   private getErrorDetails(error: unknown) {
     if (error instanceof Error) {
+      // 检查是否是 AI SDK 的错误
+      const aiError = error as any;
+      
+      // 处理网络错误
+      if (error.message.includes('fetch')) {
+        return {
+          type: 'NetworkError',
+          code: 'NETWORK_ERROR',
+          statusCode: 0,
+          message: '网络连接失败，请检查网络连接',
+          suggestions: [
+            '请检查网络连接是否正常',
+            '请检查服务器是否可访问',
+            '稍后重试'
+          ]
+        };
+      }
+      
+      // 处理 404 错误
+      if (error.message.includes('404') || aiError.status === 404) {
+        return {
+          type: 'NotFoundError',
+          code: 'MODEL_NOT_FOUND',
+          statusCode: 404,
+          message: '模型或服务端点未找到',
+          suggestions: [
+            '请检查模型名称是否正确',
+            '请检查 API 端点配置是否正确',
+            '请联系管理员确认服务状态'
+          ]
+        };
+      }
+      
+      // 处理认证错误
+      if (error.message.includes('401') || aiError.status === 401) {
+        return {
+          type: 'AuthenticationError',
+          code: 'UNAUTHORIZED',
+          statusCode: 401,
+          message: 'API 密钥无效或已过期',
+          suggestions: [
+            '请检查 API 密钥是否正确',
+            '请确认 API 密钥是否有效',
+            '请联系管理员获取新的密钥'
+          ]
+        };
+      }
+      
+      // 处理限流错误
+      if (error.message.includes('429') || aiError.status === 429) {
+        return {
+          type: 'RateLimitError',
+          code: 'TOO_MANY_REQUESTS',
+          statusCode: 429,
+          message: '请求过于频繁，已触发限流',
+          suggestions: [
+            '请稍后重试',
+            '请降低请求频率',
+            '请联系管理员增加限流配额'
+          ]
+        };
+      }
+      
+      // 处理服务器错误
+      if (error.message.includes('500') || aiError.status >= 500) {
+        return {
+          type: 'ServerError',
+          code: 'INTERNAL_SERVER_ERROR',
+          statusCode: aiError.status || 500,
+          message: '服务器内部错误',
+          suggestions: [
+            '请稍后重试',
+            '如果问题持续存在，请联系管理员',
+            '请检查服务器状态'
+          ]
+        };
+      }
+      
+      // 处理超时错误
+      if (error.message.includes('timeout') || error.message.includes('AbortError')) {
+        return {
+          type: 'TimeoutError',
+          code: 'REQUEST_TIMEOUT',
+          statusCode: 408,
+          message: '请求超时',
+          suggestions: [
+            '请稍后重试',
+            '请检查网络连接稳定性',
+            '请尝试缩短消息长度'
+          ]
+        };
+      }
+      
       return {
-        name: error.name,
-        message: error.message,
-        stack: error.stack
+        type: 'UnknownError',
+        code: error.name || 'UNKNOWN_ERROR',
+        statusCode: aiError.status || 0,
+        message: error.message || '未知错误',
+        suggestions: [
+          '请稍后重试',
+          '如果问题持续存在，请联系技术支持'
+        ]
       };
     }
+    
     return {
-      name: 'Unknown',
-      message: String(error),
-      stack: undefined
+      type: 'UnknownError',
+      code: 'UNKNOWN_ERROR',
+      statusCode: 0,
+      message: String(error) || '发生了未知错误',
+      suggestions: [
+        '请稍后重试',
+        '如果问题持续存在，请联系技术支持'
+      ]
     };
   }
 
@@ -148,20 +259,40 @@ export class ApiAdapterService {
    * 处理聊天请求 - 流式响应
    */
   public async handleChatStream(request: ChatRequest): Promise<ReadableStream> {
-    if (!request.messages || !Array.isArray(request.messages) || request.messages.length === 0) {
-      throw new Error('Invalid request: messages array is required and cannot be empty.');
+    try {
+      if (!request.messages || !Array.isArray(request.messages) || request.messages.length === 0) {
+        throw new Error('Invalid request: messages array is required and cannot be empty.');
+      }
+      const convertedMessages = this.convertMessages(request.messages);
+      const model = request.model || DEFAULT_CONFIG.model;
+      
+      const client = this.createClient();
+      const result = await streamText({
+        model: client(model),
+        messages: convertedMessages,
+        maxTokens: 1000,
+        temperature: 0.7,
+      });
+      return result.toDataStreamResponse().body!;
+    } catch (error) {
+      // 对于流式响应，我们需要创建一个包含错误信息的流
+      const errorDetails = this.getErrorDetails(error);
+      const errorResponse = {
+        error: errorDetails.message,
+        errorDetails
+      };
+      
+      // 创建一个立即返回错误的流
+      const encoder = new TextEncoder();
+      const errorData = `data: ${JSON.stringify(errorResponse)}\n\n`;
+      
+      return new ReadableStream({
+        start(controller) {
+          controller.enqueue(encoder.encode(errorData));
+          controller.close();
+        }
+      });
     }
-    const convertedMessages = this.convertMessages(request.messages);
-    const model = request.model || DEFAULT_CONFIG.model;
-    
-    const client = this.createClient();
-    const result = await streamText({
-      model: client(model),
-      messages: convertedMessages,
-      maxTokens: 1000,
-      temperature: 0.7,
-    });
-    return result.toDataStreamResponse().body!;
   }
 
   /**
@@ -191,8 +322,10 @@ export class ApiAdapterService {
         },
       };
     } catch (error) {
+      const errorDetails = this.getErrorDetails(error);
       return {
-        error: error instanceof Error ? error.message : 'Unknown error occurred',
+        error: errorDetails.message,
+        errorDetails,
       };
     }
   }
@@ -309,12 +442,14 @@ export class ApiAdapterService {
           }
         } catch (error) {
           console.error('❌ 本地API处理失败:', error);
+          const errorDetails = this.getErrorDetails(error);
           return new Response(
             JSON.stringify({
-              error: error instanceof Error ? error.message : 'Internal server error'
+              error: errorDetails.message,
+              errorDetails
             }),
             {
-              status: 500,
+              status: errorDetails.statusCode || 500,
               headers: {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',

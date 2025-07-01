@@ -7,6 +7,7 @@ import {
   ThreadPrimitive,
 } from "@assistant-ui/react";
 import type { FC } from "react";
+import { useState, useEffect } from "react";
 import {
   ArrowDownIcon,
   CheckIcon,
@@ -17,7 +18,17 @@ import {
   PencilIcon,
   RefreshCwIcon,
   SendHorizontalIcon,
+  WifiIcon,
+  LockIcon,
+  ClockIcon,
+  ServerIcon,
+  BrainIcon,
+  ShieldCheckIcon,
+  AlertTriangleIcon,
+  HelpCircleIcon,
+  XIcon,
 } from "lucide-react";
+import { AssistantUiChatError, errorConfigPresets } from "../ChatError";
 import { cn } from "@assets/lib/utils";
 
 import { Button } from "@/components/ui/Button";
@@ -190,10 +201,35 @@ const AssistantMessage: FC = () => {
 };
 
 const MessageError: FC = () => {
+  const [isBubbleMode, setIsBubbleMode] = useState(false);
+  
+  // 检测是否在气泡模式下显示
+  useEffect(() => {
+    // 根据父元素宽度或特定class判断是否为气泡模式
+    const threadElement = document.querySelector('.bg-transparent.box-border.flex.h-full');
+    if (threadElement) {
+      const width = threadElement.clientWidth;
+      // 假设宽度小于500px时为气泡模式
+      setIsBubbleMode(width < 500);
+    }
+  }, []);
+  
   return (
     <MessagePrimitive.Error>
-      <ErrorPrimitive.Root className="border-destructive bg-destructive/10 dark:text-red-200 dark:bg-destructive/5 text-destructive mt-2 rounded-md border p-3 text-sm">
-        <ErrorPrimitive.Message className="line-clamp-2" />
+      <ErrorPrimitive.Root className="hidden">
+        <ErrorPrimitive.Message />
+      </ErrorPrimitive.Root>
+      
+      <ErrorPrimitive.Root className="mt-2">
+        <AssistantUiChatError 
+          message={(document.querySelector('[data-error-message]')?.textContent || "系统错误")}
+          config={{
+            compact: isBubbleMode,
+            showTechnicalDetails: false,
+            enableReporting: false,
+            theme: 'auto'
+          }}
+        />
       </ErrorPrimitive.Root>
     </MessagePrimitive.Error>
   );
