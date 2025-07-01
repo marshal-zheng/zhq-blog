@@ -44,8 +44,7 @@ export interface ChatResponse {
 
 // 默认配置
 const DEFAULT_CONFIG = {
-  model: 'qwen-plus',
-  apiEndpoint: 'https://marsio.top/api/chat',
+  model: 'qwen-plus'
 };
 
 /**
@@ -69,8 +68,7 @@ export class ApiAdapterService {
    */
   private getCurrentSettings() {
     return {
-      model: DEFAULT_CONFIG.model,
-      apiEndpoint: DEFAULT_CONFIG.apiEndpoint,
+      model: DEFAULT_CONFIG.model
     };
   }
 
@@ -78,11 +76,25 @@ export class ApiAdapterService {
    * 创建 AI 客户端 - 配置为使用 liteLLM 服务
    */
   private createClient() {
-    const baseURL = 'https://marsio.top/api'; // AI SDK会自动添加 /chat
+    // 恢复使用正确的 liteLLM 端点
+    const baseURL = '/api';
     
     return createOpenAI({
       apiKey: 'dummy-key', // liteLLM不需要，但AI SDK需要一个值
       baseURL,
+      // 添加自定义 fetch 函数，避免被拦截器拦截
+      fetch: (url: RequestInfo | URL, init?: RequestInit) => {
+        // 为内部请求添加特殊标识
+        const newInit = {
+          ...init,
+          headers: {
+            ...init?.headers,
+            'X-Internal-Request': 'true', // 标识这是内部请求
+          },
+        };
+        // 调用原始的 fetch，绕过拦截器
+        return (globalThis as any).__originalFetch(url, newInit);
+      },
     });
   }
 
@@ -192,9 +204,22 @@ export class ApiAdapterService {
     if (this.isInterceptorSetup) {
       return;
     }
+    
+    // 保存原始 fetch 函数，供内部请求使用
+    (globalThis as any).__originalFetch = window.fetch;
+    
     const originalFetch = window.fetch;
     window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
       const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+      
+      // 检查是否是内部请求（来自 AI SDK）
+      const isInternalRequest = init?.headers && 
+        (init.headers as any)['X-Internal-Request'] === 'true';
+      
+      // 如果是内部请求，直接调用原始 fetch，不进行拦截
+      if (isInternalRequest) {
+        return originalFetch(input, init);
+      }
       
       // 处理 OPTIONS 预检请求
       if (init?.method === 'OPTIONS' && url.includes('/api/')) {
@@ -351,7 +376,6 @@ export class ApiAdapterService {
       });
       return {
         message: 'Connection test successful',
-        endpoint: settings.apiEndpoint,
         model: config.model,
         timestamp: new Date().toISOString(),
         status: 'ok',
