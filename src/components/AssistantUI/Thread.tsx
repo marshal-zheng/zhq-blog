@@ -43,24 +43,26 @@ export const Thread: FC = () => {
         ["--thread-max-width" as string]: "36rem",
       }}
     >
-      <ThreadPrimitive.Viewport className="flex flex-1 h-full w-full flex-col items-center overflow-y-auto scroll-smooth bg-inherit px-3 py-2">
-        <ThreadWelcome />
+      <ThreadPrimitive.Viewport className="flex flex-1 h-full w-full flex-col items-center overflow-y-auto scroll-smooth bg-inherit">
+        <div className="w-full px-3 py-2 flex flex-col items-center">
+          <ThreadWelcome />
 
-        <ThreadPrimitive.Messages
-          components={{
-            UserMessage: UserMessage,
-            EditComposer: EditComposer,
-            AssistantMessage: AssistantMessage,
-          }}
-        />
+          <ThreadPrimitive.Messages
+            components={{
+              UserMessage: UserMessage,
+              EditComposer: EditComposer,
+              AssistantMessage: AssistantMessage,
+            }}
+          />
 
-        <ThreadPrimitive.If empty={false}>
-          <div className="min-h-4 flex-grow" />
-        </ThreadPrimitive.If>
+          <ThreadPrimitive.If empty={false}>
+            <div className="min-h-4 flex-grow" />
+          </ThreadPrimitive.If>
 
-        <div className="sticky bottom-0 mt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-xl bg-inherit pb-3">
-          <ThreadScrollToBottom />
-          <Composer />
+          <div className="sticky bottom-0 mt-3 flex w-full max-w-[var(--thread-max-width)] flex-col items-center justify-end rounded-t-xl bg-inherit">
+            <ThreadScrollToBottom />
+            <Composer />
+          </div>
         </div>
       </ThreadPrimitive.Viewport>
     </ThreadPrimitive.Root>
