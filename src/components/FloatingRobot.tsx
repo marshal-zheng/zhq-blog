@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, Suspense, lazy, useRef, useCallback, useMemo, memo } from 'react';
 import AssistantPopover from './AssistantUI/Modal';
 import { ShineBorder } from './ShineBorder/ShineBorder';
 
@@ -6,6 +6,38 @@ import { ShineBorder } from './ShineBorder/ShineBorder';
 const BUBBLE_WIDTH = 430;    // 与样式保持一致
 const BUBBLE_HEIGHT = 580;   // 与样式保持一致
 const TOOLBAR_OFFSET = 110;  // toolbar 顶部到容器 top 的偏移量
+
+// Memoized ShineBorder for bubble modal to prevent unnecessary re-renders
+const MemoizedShineBorder = memo(({ 
+  children, 
+  enabled, 
+  isDarkTheme,
+  ...restProps 
+}: { 
+  children: React.ReactNode; 
+  enabled: boolean; 
+  isDarkTheme: boolean; 
+} & Omit<React.ComponentProps<typeof ShineBorder>, 'children' | 'enabled'>) => {
+  return (
+    <ShineBorder
+      borderWidth={3}
+      borderRadius={12}
+      duration={135}
+      className="h-full w-full shadow-2xl"
+      color={["#FF007F", "#39FF14", "#00FFFF"]}
+      enabled={enabled}
+      style={{
+        backgroundColor: isDarkTheme ? 'rgba(17, 24, 39, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+        backdropFilter: 'blur(12px)',
+      }}
+      {...restProps}
+    >
+      {children}
+    </ShineBorder>
+  );
+});
+
+MemoizedShineBorder.displayName = 'MemoizedShineBorder';
 
 const Spline = lazy(() => import('@splinetool/react-spline'));
 
@@ -21,6 +53,7 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
   const [isModalAnimating, setIsModalAnimating] = useState(false);
   const [currentMode, setCurrentMode] = useState(mode);
   const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [isDragging, setIsDragging] = useState(false); // 添加拖拽状态
 
   // 拖拽相关状态和引用
   const isDraggingRef = useRef(false);
@@ -30,6 +63,9 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
   const animationFrameRef = useRef<number>();
   const lastPositionRef = useRef({ x: 0, y: 0 });
   const themeObserverRef = useRef<MutationObserver | null>(null);
+  
+  // 用于存储实时位置，避免频繁更新状态
+  const currentPositionRef = useRef({ x: 0, y: 0 });
 
   // 使用 useMemo 缓存 CSS 变量，避免每次渲染都重新计算
   const cssVariables = useMemo(() => {
@@ -63,6 +99,40 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
     };
   }, [isDarkTheme]);
 
+  // 获取默认位置
+  const getDefaultPosition = useCallback(() => {
+    if (typeof window === 'undefined') return { x: 0, y: 0 };
+    
+    const bubbleWidth = BUBBLE_WIDTH;
+    const bubbleHeight = BUBBLE_HEIGHT;
+    const padding = 30; // 增加边距到30px，避免太贴边
+    
+    // 默认位置放在右下角，但保持足够边距
+    const defaultX = Math.max(padding, window.innerWidth - bubbleWidth - padding);
+    const defaultY = Math.max(padding, window.innerHeight - bubbleHeight - padding);
+    
+    return {
+      x: defaultX,
+      y: defaultY,
+    };
+  }, []);
+
+  // 使用 useMemo 缓存气泡位置样式，减少重新计算
+  const bubbleStyle = useMemo(() => {
+    const defaultPos = getDefaultPosition();
+    const position = {
+      x: bubblePosition.x || defaultPos.x,
+      y: bubblePosition.y || defaultPos.y,
+    };
+    
+    return {
+      left: `${position.x}px`,
+      top: `${position.y - TOOLBAR_OFFSET}px`,
+      width: `${BUBBLE_WIDTH}px`,
+      height: `${BUBBLE_HEIGHT}px`
+    };
+  }, [bubblePosition.x, bubblePosition.y, getDefaultPosition]);
+
   // 优化主题检查函数，减少不必要的状态更新
   const checkTheme = useCallback(() => {
     if (typeof window !== 'undefined') {
@@ -77,10 +147,23 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
     }
   }, []);
 
-  // 直接通过状态更新位置，避免DOM操作导致的双重位移
+  // 直接通过DOM操作更新位置，避免频繁状态更新
+  const applyTransformDirect = useCallback((x: number, y: number) => {
+    if (bubbleRef.current) {
+      const bubbleContainer = bubbleRef.current.parentElement;
+      if (bubbleContainer) {
+        bubbleContainer.style.left = `${x}px`;
+        bubbleContainer.style.top = `${y - TOOLBAR_OFFSET}px`;
+        currentPositionRef.current = { x, y };
+      }
+    }
+  }, []);
+
+  // 直接通过状态更新位置，用于非拖拽场景
   const applyTransform = useCallback((x: number, y: number) => {
     // 直接更新状态而不是操作DOM
     setBubblePosition({ x, y });
+    currentPositionRef.current = { x, y };
   }, []);
 
   useEffect(() => {
@@ -171,26 +254,8 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
     };
   }, [currentMode, bubblePosition, checkTheme]);
 
-  // 获取默认位置
-  const getDefaultPosition = useCallback(() => {
-    if (typeof window === 'undefined') return { x: 0, y: 0 };
-    
-    const bubbleWidth = BUBBLE_WIDTH;
-    const bubbleHeight = BUBBLE_HEIGHT;
-    const padding = 30; // 增加边距到30px，避免太贴边
-    
-    // 默认位置放在右下角，但保持足够边距
-    const defaultX = Math.max(padding, window.innerWidth - bubbleWidth - padding);
-    const defaultY = Math.max(padding, window.innerHeight - bubbleHeight - padding);
-    
-    return {
-      x: defaultX,
-      y: defaultY,
-    };
-  }, []);
-
   // 优化的位置更新函数
-  const updatePosition = useCallback((newX: number, newY: number) => {
+  const updatePosition = useCallback((newX: number, newY: number, isDragging = false) => {
     // 边界检测 - 确保气泡完全在视口内
     // X轴边界：左右两边留10px边距
     const maxX = Math.max(0, window.innerWidth - BUBBLE_WIDTH - 10);
@@ -211,10 +276,16 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
       lastPositionRef.current.y !== clampedY
     ) {
       lastPositionRef.current = { x: clampedX, y: clampedY };
-      // 通过状态更新位置
-      applyTransform(clampedX, clampedY);
+      
+      // 拖拽时使用DOM直接操作，避免重新渲染
+      if (isDragging) {
+        applyTransformDirect(clampedX, clampedY);
+      } else {
+        // 非拖拽时使用状态更新
+        applyTransform(clampedX, clampedY);
+      }
     }
-  }, [applyTransform]);
+  }, [applyTransform, applyTransformDirect]);
 
   // 拖拽开始
   const handleMouseDown = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
@@ -222,6 +293,7 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
 
     isDraggingRef.current = true;
     hasDraggedRef.current = false; // 重置拖拽标志
+    setIsDragging(true); // 设置拖拽状态
 
     // 阻止默认行为，防止文本被选中
     e.preventDefault();
@@ -229,8 +301,8 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
 
     const defaultPos = getDefaultPosition();
     const startPos = {
-      x: bubblePosition.x || defaultPos.x,
-      y: bubblePosition.y || defaultPos.y,
+      x: currentPositionRef.current.x || bubblePosition.x || defaultPos.x,
+      y: currentPositionRef.current.y || bubblePosition.y || defaultPos.y,
     };
 
     const startMouse = { x: e.clientX, y: e.clientY };
@@ -255,16 +327,23 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
         const newX = startPos.x + deltaX;
         const newY = startPos.y + deltaY;
 
-        updatePosition(newX, newY);
+        updatePosition(newX, newY, true); // 标记为拖拽操作
       });
     };
 
     const handleMouseUp = () => {
       isDraggingRef.current = false;
       document.body.style.userSelect = '';
+      setIsDragging(false); // 重置拖拽状态
 
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
+      }
+
+      // 拖拽结束后，同步状态到state，以便其他地方使用
+      const finalPosition = currentPositionRef.current;
+      if (finalPosition.x !== bubblePosition.x || finalPosition.y !== bubblePosition.y) {
+        setBubblePosition(finalPosition);
       }
 
       // 延迟重置拖拽标志，避免影响后续的点击事件
@@ -295,11 +374,13 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
       setIsModalAnimating(false);
       setTimeout(() => {
         setIsModalOpen(false);
-        // 隐藏时初始化为bubble模式
-        setCurrentMode('bubble');
-        // 隐藏时重置位置到默认位置
-        const defaultPos = getDefaultPosition();
-        setBubblePosition(defaultPos);
+        // 不强制设置为bubble模式，保持当前模式
+        // setCurrentMode('bubble');
+        // 只有在气泡模式时才重置位置
+        if (currentMode === 'bubble') {
+          const defaultPos = getDefaultPosition();
+          setBubblePosition(defaultPos);
+        }
       }, 200);
     } else {
       // 打开动画前，确保气泡模式有正确的位置
@@ -319,11 +400,13 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
     setIsModalAnimating(false);
     setTimeout(() => {
       setIsModalOpen(false);
-      // 隐藏时初始化为bubble模式
-      setCurrentMode('bubble');
-      // 隐藏时重置位置到默认位置
-      const defaultPos = getDefaultPosition();
-      setBubblePosition(defaultPos);
+      // 不强制设置为bubble模式，保持当前模式
+      // setCurrentMode('bubble');
+      // 只有在气泡模式时才重置位置
+      if (currentMode === 'bubble') {
+        const defaultPos = getDefaultPosition();
+        setBubblePosition(defaultPos);
+      }
     }, 200);
   };
 
@@ -393,22 +476,11 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
 
   // 气泡模式的 Modal
   const renderBubbleModal = () => {
-    const defaultPos = getDefaultPosition();
-    const position = {
-      x: bubblePosition.x || defaultPos.x,
-      y: bubblePosition.y || defaultPos.y,
-    };
-
     return (
       <div 
         className="fixed z-50"
         data-no-splash="true"
-        style={{
-          left: `${position.x}px`,
-          top: `${position.y - TOOLBAR_OFFSET}px`,
-          width: `${BUBBLE_WIDTH}px`,
-          height: `${BUBBLE_HEIGHT}px`
-        }}
+        style={bubbleStyle}
       >
         <div
           ref={bubbleRef}
@@ -418,16 +490,9 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
             ${isModalAnimating ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
           `}
         >
-          <ShineBorder
-            borderWidth={3}
-            borderRadius={12}
-            duration={135}
-            className="h-full w-full shadow-2xl"
-            color={["#FF007F", "#39FF14", "#00FFFF"]}
-            style={{
-              backgroundColor: isDarkTheme ? 'rgba(17, 24, 39, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(12px)',
-            }}
+          <MemoizedShineBorder
+            enabled={isModalOpen && !isDragging} // 只有在模态框打开且不在拖拽时才启用边框动画
+            isDarkTheme={isDarkTheme}
           >
             {/* 顶部工具栏 - 拖拽区域 */}
             <div 
@@ -502,7 +567,7 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
                 </div>
               </div>
             </div>
-          </ShineBorder>
+          </MemoizedShineBorder>
         </div>
       </div>
     );
@@ -545,7 +610,7 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
           duration={10}
           className="w-[80px] h-[80px]"
           color={["#FF007F", "#39FF14", "#00FFFF"]}
-          enabled={isModalOpen || isHovered} // 只有在模态框打开或悬停时才启用边框效果
+          enabled={(isModalOpen || isHovered) && !isDragging} // 拖拽时禁用边框效果
         >
           <div
             className={`
@@ -596,4 +661,4 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
   );
 };
 
-export default FloatingRobot; 
+export default FloatingRobot;
