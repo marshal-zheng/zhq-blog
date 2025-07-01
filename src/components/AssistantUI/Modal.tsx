@@ -6,6 +6,10 @@ import { Thread } from "./Thread";
 const AssistantPopover: React.FC = () => {
   const runtime = useChatRuntime({
     api: "/api/chat",
+    body: {
+      model: "qwen-plus",
+      stream: true,
+    }
   });
 
   return (

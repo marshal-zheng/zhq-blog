@@ -9,7 +9,6 @@ import astroI18next from 'astro-i18next';
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import mdx from '@astrojs/mdx'
-import fs from 'node:fs';
 import path from 'path';
 
 // https://astro.build/config
@@ -60,12 +59,6 @@ export default defineConfig({
         '@': path.resolve('./src'),
       },
     },
-    server: {
-      // https: {
-      //   key: fs.readFileSync('./localhost-key.pem'),
-      //   cert: fs.readFileSync('./localhost.pem'),
-      // }
-    }
   },
   scopedStyleStrategy: "where",
   experimental: {
