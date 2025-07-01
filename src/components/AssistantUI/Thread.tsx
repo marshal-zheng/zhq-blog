@@ -107,13 +107,38 @@ const ThreadWelcome: FC = () => {
 };
 
 const Composer: FC = () => {
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  
+  useEffect(() => {
+    // 检测是否为全屏模式
+    const checkFullScreen = () => {
+      const threadElement = document.querySelector('.bg-transparent.box-border.flex.h-full');
+      if (threadElement) {
+        const width = threadElement.clientWidth;
+        // 假设宽度大于等于500px时为全屏模式
+        setIsFullScreen(width >= 500);
+      }
+    };
+    
+    checkFullScreen();
+    window.addEventListener('resize', checkFullScreen);
+    
+    return () => window.removeEventListener('resize', checkFullScreen);
+  }, []);
+
   return (
-    <ComposerPrimitive.Root className="focus-within:border-blue-400/50 focus-within:ring-2 focus-within:ring-blue-400/20 flex w-full flex-wrap items-center rounded-xl border border-gray-200/60 dark:border-gray-700/60 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 py-1.5 shadow-sm transition-all duration-200 ease-out">
+    <ComposerPrimitive.Root className={cn(
+      "focus-within:border-blue-400/50 focus-within:ring-2 focus-within:ring-blue-400/20 flex w-full flex-wrap items-center rounded-xl border border-gray-200/60 dark:border-gray-700/60 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-3 shadow-sm transition-all duration-200 ease-out",
+      isFullScreen ? "py-2.5" : "py-1.5"
+    )}>
       <ComposerPrimitive.Input
         rows={1}
         autoFocus
         placeholder="输入您的问题..."
-        className="placeholder:text-gray-500 dark:placeholder:text-gray-400 max-h-24 flex-grow resize-none border-none bg-transparent px-2 py-1 text-sm text-gray-900 dark:text-gray-100 outline-none focus:ring-0 disabled:cursor-not-allowed font-medium leading-relaxed"
+        className={cn(
+          "placeholder:text-gray-500 dark:placeholder:text-gray-400 max-h-24 flex-grow resize-none border-none bg-transparent px-2 text-sm text-gray-900 dark:text-gray-100 outline-none focus:ring-0 disabled:cursor-not-allowed font-medium leading-relaxed",
+          isFullScreen ? "py-1.5" : "py-1"
+        )}
       />
       <ComposerAction />
     </ComposerPrimitive.Root>
