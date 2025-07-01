@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense, lazy, useRef, useCallback } from 'react';
+import React, { useState, useEffect, Suspense, lazy, useRef, useCallback, useMemo } from 'react';
 import AssistantPopover from './AssistantUI/Modal';
 import { ShineBorder } from './ShineBorder/ShineBorder';
 
@@ -29,6 +29,53 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
   const bubbleRef = useRef<HTMLDivElement>(null);
   const animationFrameRef = useRef<number>();
   const lastPositionRef = useRef({ x: 0, y: 0 });
+  const themeObserverRef = useRef<MutationObserver | null>(null);
+
+  // 使用 useMemo 缓存 CSS 变量，避免每次渲染都重新计算
+  const cssVariables = useMemo(() => {
+    const isDark = isDarkTheme;
+    return {
+      '--background': isDark ? '240 10% 3.9%' : '0 0% 100%',
+      '--foreground': isDark ? '0 0% 98%' : '240 10% 3.9%',
+      '--muted': isDark ? '240 3.7% 15.9%' : '240 4.8% 95.9%',
+      '--muted-foreground': isDark ? '240 5% 64.9%' : '240 3.8% 46.1%',
+      '--border': isDark ? '240 3.7% 15.9%' : '240 5.9% 90%',
+      '--input': isDark ? '240 3.7% 15.9%' : '240 5.9% 90%',
+      '--ring': isDark ? '240 4.9% 83.9%' : '240 10% 3.9%',
+      '--radius': '0.5rem',
+      '--chart-1': '12 76% 61%',
+      '--chart-2': '173 58% 39%',
+      '--chart-3': '197 37% 24%',
+      '--chart-4': '43 74% 66%',
+      '--chart-5': '27 87% 67%',
+      '--primary': isDark ? '0 0% 98%' : '240 10% 3.9%',
+      '--primary-foreground': isDark ? '240 10% 3.9%' : '0 0% 98%',
+      '--secondary': isDark ? '240 3.7% 15.9%' : '240 4.8% 95.9%',
+      '--secondary-foreground': isDark ? '0 0% 98%' : '240 10% 3.9%',
+      '--accent': isDark ? '240 3.7% 15.9%' : '240 4.8% 95.9%',
+      '--accent-foreground': isDark ? '0 0% 98%' : '240 10% 3.9%',
+      '--card': isDark ? '240 10% 3.9%' : '0 0% 100%',
+      '--card-foreground': isDark ? '0 0% 98%' : '240 10% 3.9%',
+      '--popover': isDark ? '240 10% 3.9%' : '0 0% 100%',
+      '--popover-foreground': isDark ? '0 0% 98%' : '240 10% 3.9%',
+      '--destructive': '0 84.2% 60.2%',
+      '--destructive-foreground': '0 0% 98%',
+    };
+  }, [isDarkTheme]);
+
+  // 优化主题检查函数，减少不必要的状态更新
+  const checkTheme = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      setIsDarkTheme(prevTheme => {
+        // 只有当主题真正改变时才更新状态
+        if (prevTheme !== isDark) {
+          return isDark;
+        }
+        return prevTheme;
+      });
+    }
+  }, []);
 
   // 直接通过状态更新位置，避免DOM操作导致的双重位移
   const applyTransform = useCallback((x: number, y: number) => {
@@ -38,15 +85,14 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
 
   useEffect(() => {
     const checkIsMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    // 检查当前主题
-    const checkTheme = () => {
-      if (typeof window !== 'undefined') {
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        setIsDarkTheme(isDark);
-      }
+      const newIsMobile = window.innerWidth < 768;
+      setIsMobile(prevMobile => {
+        // 只有当移动设备状态真正改变时才更新
+        if (prevMobile !== newIsMobile) {
+          return newIsMobile;
+        }
+        return prevMobile;
+      });
     };
 
     // 窗口大小变化时重新调整气泡位置
@@ -60,9 +106,6 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
         const padding = 10;
         
         const maxX = Math.max(0, window.innerWidth - bubbleWidth - padding);
-        // const maxY = Math.max(0, window.innerHeight - bubbleHeight - padding);
-        // const minX = padding;
-        // const minY = padding;
         const minX = padding;
         const minY = TOOLBAR_OFFSET; // 顶部最小值，保证 top ≥ 0
         const maxY = Math.max(0, window.innerHeight - (bubbleHeight - TOOLBAR_OFFSET));
@@ -76,23 +119,37 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
       }
     };
 
-    // 主题变化监听器
-    const themeObserver = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'data-theme') {
-          checkTheme();
+    // 优化主题变化监听器 - 添加防抖机制
+    let themeCheckTimeout: NodeJS.Timeout;
+    const debouncedThemeCheck = () => {
+      clearTimeout(themeCheckTimeout);
+      themeCheckTimeout = setTimeout(checkTheme, 100); // 100ms 防抖
+    };
+
+    // 清理旧的观察器
+    if (themeObserverRef.current) {
+      themeObserverRef.current.disconnect();
+    }
+
+    // 创建新的主题观察器
+    if (typeof window !== 'undefined') {
+      themeObserverRef.current = new MutationObserver((mutations) => {
+        // 只处理 data-theme 属性的变化
+        const hasThemeChange = mutations.some(
+          (mutation) => mutation.type === 'attributes' && mutation.attributeName === 'data-theme'
+        );
+        if (hasThemeChange) {
+          debouncedThemeCheck();
         }
       });
-    });
 
-    // 开始监听
-    if (typeof window !== 'undefined') {
-      themeObserver.observe(document.documentElement, {
+      themeObserverRef.current.observe(document.documentElement, {
         attributes: true,
-        attributeFilter: ['data-theme']
+        attributeFilter: ['data-theme'] // 只监听 data-theme 属性
       });
     }
 
+    // 初始化
     checkTheme();
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -103,13 +160,16 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      themeObserver.disconnect();
+      if (themeObserverRef.current) {
+        themeObserverRef.current.disconnect();
+      }
       clearTimeout(timer);
+      clearTimeout(themeCheckTimeout);
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
     };
-  }, [currentMode, bubblePosition]);
+  }, [currentMode, bubblePosition, checkTheme]);
 
   // 获取默认位置
   const getDefaultPosition = useCallback(() => {
@@ -132,8 +192,6 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
   // 优化的位置更新函数
   const updatePosition = useCallback((newX: number, newY: number) => {
     // 边界检测 - 确保气泡完全在视口内
-    const bubbleWidth = BUBBLE_WIDTH;
-
     // X轴边界：左右两边留10px边距
     const maxX = Math.max(0, window.innerWidth - BUBBLE_WIDTH - 10);
     const minX = 10;
@@ -341,39 +399,6 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
       y: bubblePosition.y || defaultPos.y,
     };
 
-    // 使用响应式主题状态
-    const isDark = isDarkTheme;
-
-    // 根据主题设置CSS变量 - 使用更明确的颜色值确保可见性
-    const cssVariables = {
-      '--background': isDark ? '240 10% 3.9%' : '0 0% 100%',
-      '--foreground': isDark ? '0 0% 98%' : '240 10% 3.9%',
-      '--muted': isDark ? '240 3.7% 15.9%' : '240 4.8% 95.9%',
-      '--muted-foreground': isDark ? '240 5% 64.9%' : '240 3.8% 46.1%',
-      '--border': isDark ? '240 3.7% 15.9%' : '240 5.9% 90%',
-      '--input': isDark ? '240 3.7% 15.9%' : '240 5.9% 90%',
-      '--ring': isDark ? '240 4.9% 83.9%' : '240 10% 3.9%',
-      '--radius': '0.5rem',
-      '--chart-1': '12 76% 61%',
-      '--chart-2': '173 58% 39%',
-      '--chart-3': '197 37% 24%',
-      '--chart-4': '43 74% 66%',
-      '--chart-5': '27 87% 67%',
-      // 添加更多的颜色变量以确保兼容性
-      '--primary': isDark ? '0 0% 98%' : '240 10% 3.9%',
-      '--primary-foreground': isDark ? '240 10% 3.9%' : '0 0% 98%',
-      '--secondary': isDark ? '240 3.7% 15.9%' : '240 4.8% 95.9%',
-      '--secondary-foreground': isDark ? '0 0% 98%' : '240 10% 3.9%',
-      '--accent': isDark ? '240 3.7% 15.9%' : '240 4.8% 95.9%',
-      '--accent-foreground': isDark ? '0 0% 98%' : '240 10% 3.9%',
-      '--card': isDark ? '240 10% 3.9%' : '0 0% 100%',
-      '--card-foreground': isDark ? '0 0% 98%' : '240 10% 3.9%',
-      '--popover': isDark ? '240 10% 3.9%' : '0 0% 100%',
-      '--popover-foreground': isDark ? '0 0% 98%' : '240 10% 3.9%',
-      '--destructive': '0 84.2% 60.2%',
-      '--destructive-foreground': '0 0% 98%',
-    };
-
     return (
       <div 
         className="fixed z-50"
@@ -400,7 +425,7 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
             className="h-full w-full shadow-2xl"
             color={["#FF007F", "#39FF14", "#00FFFF"]}
             style={{
-              backgroundColor: isDark ? 'rgba(17, 24, 39, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+              backgroundColor: isDarkTheme ? 'rgba(17, 24, 39, 0.95)' : 'rgba(255, 255, 255, 0.95)',
               backdropFilter: 'blur(12px)',
             }}
           >
@@ -460,7 +485,7 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
               </div>
             </div>
             
-            {/* 内容区域 */}
+            {/* 内容区域 - 使用 memo 化的 CSS 变量 */}
             <div 
               className="h-[calc(100%-80px)] p-0 relative overflow-hidden"
               style={cssVariables as React.CSSProperties}
@@ -469,7 +494,7 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
                 <div 
                   className="h-full w-full"
                   style={{
-                    color: isDark ? '#ffffff' : '#000000',
+                    color: isDarkTheme ? '#ffffff' : '#000000',
                     backgroundColor: 'transparent'
                   }}
                 >
@@ -514,62 +539,17 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
           backfaceVisibility: 'hidden',
         }}
       >
-        {isModalOpen ? (
-          <ShineBorder
-            borderWidth={3}
-            borderRadius={40}
-            duration={10}
-            className="w-[80px] h-[80px]"
-            color={["#FF007F", "#39FF14", "#00FFFF"]}
-          >
-            <div
-              className={`
-                relative w-full h-full rounded-full 
-                overflow-hidden
-                transform transition-all duration-300 ease-out
-                ${isHovered
-                  ? 'shadow-2xl shadow-blue-500/30 bg-black/30 scale-110'
-                  : 'shadow-lg shadow-black/20 scale-100'
-                }
-              `}
-              style={{
-                transformOrigin: 'center',
-              }}
-            >
-              <Suspense
-                fallback={
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full">
-                    <div className="relative">
-                      <div className="w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full animate-spin" />
-                      <div
-                        className="absolute inset-0 w-8 h-8 border-2 border-purple-400 border-b-transparent rounded-full animate-spin"
-                        style={{
-                          animationDirection: 'reverse',
-                          animationDuration: '1.5s'
-                        }}
-                      />
-                    </div>
-                  </div>
-                }
-              >
-                <Spline
-                  scene="/robot.splinecode"
-                  className={`
-                    w-full h-full 
-                    transition-transform duration-300 ease-out
-                    ${isHovered ? 'scale-105' : 'scale-100'}
-                  `}
-                  style={{
-                    pointerEvents: 'auto',
-                  }}
-                />
-              </Suspense>
-            </div>
-          </ShineBorder>
-        ) : (
+        <ShineBorder
+          borderWidth={3}
+          borderRadius={40}
+          duration={10}
+          className="w-[80px] h-[80px]"
+          color={["#FF007F", "#39FF14", "#00FFFF"]}
+          enabled={isModalOpen || isHovered} // 只有在模态框打开或悬停时才启用边框效果
+        >
           <div
             className={`
-              relative w-[80px] h-[80px] rounded-full 
+              relative w-full h-full rounded-full 
               overflow-hidden
               transform transition-all duration-300 ease-out
               ${isHovered
@@ -610,7 +590,7 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
               />
             </Suspense>
           </div>
-        )}
+        </ShineBorder>
       </div>
     </>
   );

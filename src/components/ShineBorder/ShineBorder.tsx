@@ -12,6 +12,7 @@ interface ShineBorderProps {
   className?: string;
   style?: React.CSSProperties;
   children: React.ReactNode;
+  enabled?: boolean; // 是否启用边框效果，默认为 true
 }
 
 /**
@@ -22,6 +23,7 @@ interface ShineBorderProps {
  * @param duration defines the animation duration to be applied on the shining border
  * @param color a string or string array to define border color.
  * @param className defines the class name to be applied to the component
+ * @param enabled controls whether the border effect is enabled, defaults to true
  * @param children contains react node elements.
  */
 function ShineBorder({
@@ -32,6 +34,7 @@ function ShineBorder({
   className,
   style,
   children,
+  enabled = true,
 }: ShineBorderProps) {
   // 处理圆角配置
   const getBorderRadius = () => {
@@ -81,12 +84,12 @@ function ShineBorder({
 
   return (
     <>
-      <style>{keyframes}</style>
+      {enabled && <style>{keyframes}</style>}
       <div
         style={containerStyle}
         className={clsx(className)}
       >
-        <div style={beforeStyle} />
+        {enabled && <div style={beforeStyle} />}
         <div 
           className="relative z-10 h-full w-full"
           style={{

@@ -147,5 +147,80 @@ const structuredData = {
         console.log('⚠️  API适配器已存在，跳过重复初始化');
       }
     </script>
+
+    <!-- 微信二维码加载监控脚本 -->
+    <script>
+      // 监控微信二维码图片的加载情况
+      document.addEventListener('DOMContentLoaded', () => {
+        // 由于现在使用懒加载，图片初始时没有src属性，需要监控data-src
+        const wechatImg = document.querySelector('img[data-src="/assets/wechat-qrcode.jpg"]');
+        if (wechatImg) {
+          console.log('🔍 发现微信二维码图片元素（懒加载模式）');
+          
+          // 创建MutationObserver来监控src属性的变化
+          const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+              if (mutation.type === 'attributes' && mutation.attributeName === 'src') {
+                const img = mutation.target as HTMLImageElement;
+                if (img.src.includes('wechat-qrcode.jpg')) {
+                  console.log('🖼️ 微信二维码图片开始懒加载');
+                  
+                  img.addEventListener('load', () => {
+                    console.log('✅ 微信二维码图片懒加载完成');
+                  }, { once: true });
+                  
+                  img.addEventListener('error', () => {
+                    console.error('❌ 微信二维码图片加载失败');
+                  }, { once: true });
+                }
+              }
+            });
+          });
+          
+          observer.observe(wechatImg, { attributes: true, attributeFilter: ['src'] });
+        } else {
+          console.log('🔍 未找到微信二维码图片元素');
+        }
+        
+        // 监控所有图片请求
+        const originalFetch = window.fetch;
+        window.fetch = function(...args) {
+          const url = args[0];
+          if (typeof url === 'string' && url.includes('wechat-qrcode.jpg')) {
+            console.log('🔍 检测到微信二维码图片请求:', url);
+          }
+          return originalFetch.apply(this, args);
+        };
+        
+        // 监控所有网络请求
+        if (window.performance && window.performance.getEntriesByType) {
+          const checkImageRequests = () => {
+            const entries = window.performance.getEntriesByType('resource');
+            const wechatRequests = entries.filter(entry => 
+              entry.name.includes('wechat-qrcode.jpg')
+            );
+            
+            if (wechatRequests.length > 1) {
+              console.warn('⚠️ 检测到微信二维码图片重复请求:', wechatRequests.length, '次');
+              wechatRequests.forEach((request, index) => {
+                console.log(`请求 ${index + 1}:`, {
+                  时间: new Date(request.startTime).toLocaleTimeString(),
+                  耗时: `${(request.responseEnd - request.startTime).toFixed(2)}ms`,
+                  URL: request.name
+                });
+              });
+            } else if (wechatRequests.length === 1) {
+              console.log('✅ 微信二维码图片只请求了一次');
+            }
+          };
+          
+          // 延迟检查，给页面足够的时间加载
+          setTimeout(checkImageRequests, 3000);
+          
+          // 在页面卸载前检查
+          window.addEventListener('beforeunload', checkImageRequests);
+        }
+      });
+    </script>
   </body>
 </html>
