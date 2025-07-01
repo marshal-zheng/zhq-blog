@@ -375,13 +375,11 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
       setIsModalAnimating(false);
       setTimeout(() => {
         setIsModalOpen(false);
-        // 不强制设置为bubble模式，保持当前模式
-        // setCurrentMode('bubble');
-        // 只有在气泡模式时才重置位置
-        if (currentMode === 'bubble') {
-          const defaultPos = getDefaultPosition();
-          setBubblePosition(defaultPos);
-        }
+        // 关闭后默认切换回气泡模式，下次打开时就是气泡模式
+        setCurrentMode('bubble');
+        // 重置气泡位置到默认位置
+        const defaultPos = getDefaultPosition();
+        setBubblePosition(defaultPos);
       }, 200);
     } else {
       // 打开动画前，确保气泡模式有正确的位置
@@ -401,13 +399,11 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
     setIsModalAnimating(false);
     setTimeout(() => {
       setIsModalOpen(false);
-      // 不强制设置为bubble模式，保持当前模式
-      // setCurrentMode('bubble');
-      // 只有在气泡模式时才重置位置
-      if (currentMode === 'bubble') {
-        const defaultPos = getDefaultPosition();
-        setBubblePosition(defaultPos);
-      }
+      // 关闭后默认切换回气泡模式，下次打开时就是气泡模式
+      setCurrentMode('bubble');
+      // 重置气泡位置到默认位置
+      const defaultPos = getDefaultPosition();
+      setBubblePosition(defaultPos);
     }, 200);
   };
 
