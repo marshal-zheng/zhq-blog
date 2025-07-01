@@ -21,6 +21,7 @@ export const TooltipIconButton = forwardRef<
   HTMLButtonElement,
   TooltipIconButtonProps
 >(({ children, tooltip, side = "bottom", className, ...rest }, ref) => {
+  tooltip = ''
   // 如果没有 tooltip 内容，直接返回按钮而不包装 Tooltip
   if (!tooltip) {
     return (
