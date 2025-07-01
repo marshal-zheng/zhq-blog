@@ -74,7 +74,7 @@ function ShineBorder({
     backgroundSize: '300% 300%',
     backgroundPosition: '0% 0%',
     animation: `${animationId} ${duration}s infinite`,
-    borderRadius: 'inherit',
+    borderRadius: getBorderRadius(), // 使用与容器相同的圆角
     WebkitMask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
     mask: 'linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)',
     WebkitMaskComposite: 'xor',
@@ -91,9 +91,9 @@ function ShineBorder({
       >
         {enabled && <div style={beforeStyle} />}
         <div 
-          className="relative z-10 h-full w-full"
+          className="relative z-10 h-full w-full overflow-hidden"
           style={{
-            borderRadius: `calc(${getBorderRadius()} - ${borderWidth}px)`,
+            borderRadius: getBorderRadius(), // 使用与容器相同的圆角，而不是减去边框宽度
           }}
         >
           {children}

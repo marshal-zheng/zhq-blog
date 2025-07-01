@@ -3,8 +3,8 @@ import AssistantPopover from './AssistantUI/Modal';
 import { ShineBorder } from './ShineBorder/ShineBorder';
 
 // === Bubble modal geometry ===
-const BUBBLE_WIDTH = 430;    // 与样式保持一致
-const BUBBLE_HEIGHT = 580;   // 与样式保持一致
+const BUBBLE_WIDTH = 430;    // 恢复原始宽度
+const BUBBLE_HEIGHT = 580;   // 恢复原始高度
 const TOOLBAR_OFFSET = 110;  // toolbar 顶部到容器 top 的偏移量
 
 // Memoized ShineBorder for bubble modal to prevent unnecessary re-renders
@@ -23,12 +23,13 @@ const MemoizedShineBorder = memo(({
       borderWidth={3}
       borderRadius={12}
       duration={135}
-      className="h-full w-full shadow-2xl"
+      className="h-full w-full shadow-2xl rounded-xl"
       color={["#FF007F", "#39FF14", "#00FFFF"]}
       enabled={enabled}
       style={{
         backgroundColor: isDarkTheme ? 'rgba(17, 24, 39, 0.95)' : 'rgba(255, 255, 255, 0.95)',
         backdropFilter: 'blur(12px)',
+        borderRadius: '12px', // 确保圆角一致
       }}
       {...restProps}
     >
@@ -489,6 +490,9 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
             transition-all duration-200 ease-out
             ${isModalAnimating ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}
           `}
+          style={{
+            borderRadius: '12px', // 明确设置圆角，与 ShineBorder 保持一致
+          }}
         >
           <MemoizedShineBorder
             enabled={isModalOpen && !isDragging} // 只有在模态框打开且不在拖拽时才启用边框动画
@@ -496,7 +500,11 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
           >
             {/* 顶部工具栏 - 拖拽区域 */}
             <div 
-              className="flex items-center justify-between p-4 border-b border-gray-200/50 dark:border-gray-700/50 bg-gradient-to-r from-blue-400/20 via-purple-500/20 to-pink-500/20 cursor-move"
+              className="flex items-center justify-between px-4 py-3 border-b border-gray-200/30 dark:border-gray-700/30 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm cursor-move rounded-t-xl"
+              style={{
+                borderTopLeftRadius: '12px',
+                borderTopRightRadius: '12px',
+              }}
               onMouseDown={handleMouseDown}
               onClick={(e) => {
                 // 如果发生了拖拽，不触发点击事件
@@ -508,30 +516,42 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
             >
               <div className="flex items-center space-x-3 flex-1">
                 {/* 拖拽指示器 */}
-                <div className="flex items-center space-x-2 text-gray-400 dark:text-gray-500 opacity-60 hover:opacity-100 transition-opacity" title="拖拽移动">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <div className="flex items-center space-x-1.5 text-gray-400 dark:text-gray-500 opacity-50 hover:opacity-100 transition-all duration-200" title="拖拽移动">
+                  <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M9 3h2v2H9V3zm4 0h2v2h-2V3zM9 7h2v2H9V7zm4 0h2v2h-2V7zm-4 4h2v2H9v-2zm4 0h2v2h-2v-2zm-4 4h2v2H9v-2zm4 0h2v2h-2v-2zm-4 4h2v2H9v-2zm4 0h2v2h-2v-2z"></path>
                   </svg>
                 </div>
                 
-                <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center shadow-lg">
-                  <span className="text-white text-sm font-bold">AI</span>
+                {/* AI 头像 */}
+                <div className="relative">
+                  <div className="w-7 h-7 bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 rounded-full flex items-center justify-center shadow-md ring-2 ring-white/20">
+                    <span className="text-white text-xs font-semibold tracking-wide">AI</span>
+                  </div>
+                  <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-white dark:border-gray-900"></div>
                 </div>
-                <div>
-                  <h3 className="font-semibold text-white drop-shadow-sm">ZHQ 的智能助手</h3>
-                  <p className="text-xs text-blue-100 drop-shadow-sm">随时为您提供帮助 ✨</p>
+                
+                {/* 标题信息 */}
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-semibold text-sm text-gray-900 dark:text-gray-100 tracking-tight leading-none">
+                    ZHQ 智能助手
+                  </h3>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 font-medium">
+                    在线 · 随时为您服务
+                  </p>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
+              
+              {/* 操作按钮 */}
+              <div className="flex items-center space-x-1">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     toggleMode();
                   }}
-                  className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors duration-150"
+                  className="p-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100/80 dark:hover:bg-gray-700/50 rounded-md transition-all duration-150 group"
                   title="切换到全屏模式"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                   </svg>
                 </button>
@@ -540,10 +560,10 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
                     e.stopPropagation();
                     handleClose();
                   }}
-                  className="p-2 text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition-colors duration-150"
+                  className="p-1.5 text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-all duration-150 group"
                   title="关闭"
                 >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -552,14 +572,18 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
             
             {/* 内容区域 - 使用 memo 化的 CSS 变量 */}
             <div 
-              className="h-[calc(100%-80px)] p-0 relative overflow-hidden"
-              style={cssVariables as React.CSSProperties}
+              className="h-[calc(100%-64px)] relative overflow-hidden bg-gray-50/50 dark:bg-gray-900/50 rounded-b-xl"
+              style={{
+                ...cssVariables as React.CSSProperties,
+                borderBottomLeftRadius: '12px',
+                borderBottomRightRadius: '12px',
+              }}
             >
               <div className="h-full w-full relative">
                 <div 
                   className="h-full w-full"
                   style={{
-                    color: isDarkTheme ? '#ffffff' : '#000000',
+                    color: isDarkTheme ? '#f8fafc' : '#1e293b',
                     backgroundColor: 'transparent'
                   }}
                 >
