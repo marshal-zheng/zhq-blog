@@ -141,18 +141,15 @@ export class ApiAdapterService {
     }
     const convertedMessages = this.convertMessages(request.messages);
     const model = request.model || DEFAULT_CONFIG.model;
-    try {
-      const client = this.createClient();
-      const result = await streamText({
-        model: client(model),
-        messages: convertedMessages,
-        maxTokens: 1000,
-        temperature: 0.7,
-      });
-      return result.toDataStreamResponse().body!;
-    } catch (error) {
-      throw error;
-    }
+    
+    const client = this.createClient();
+    const result = await streamText({
+      model: client(model),
+      messages: convertedMessages,
+      maxTokens: 1000,
+      temperature: 0.7,
+    });
+    return result.toDataStreamResponse().body!;
   }
 
   /**
@@ -198,6 +195,8 @@ export class ApiAdapterService {
     const originalFetch = window.fetch;
     window.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
       const url = typeof input === 'string' ? input : input instanceof URL ? input.href : input.url;
+      
+      // 处理 OPTIONS 预检请求
       if (init?.method === 'OPTIONS' && url.includes('/api/')) {
         return new Response(null, {
           status: 200,
@@ -209,17 +208,51 @@ export class ApiAdapterService {
           },
         });
       }
-      const isLocalApiRequest = url.includes('/api/chat') && (
-        url.startsWith('/api/') ||
-        url.startsWith(window.location.origin + '/api/') ||
-        (!url.startsWith('http') && !url.startsWith('//'))
+      
+      // 改进的本地API请求判断逻辑
+      // 检查是否是聊天API请求，无论是相对路径还是完整URL
+      const isLocalApiRequest = (
+        url.includes('/api/chat') && 
+        (
+          // 相对路径：/api/chat
+          url.startsWith('/api/chat') ||
+          // 当前域名的完整URL：https://marsio.top/api/chat
+          url.startsWith(window.location.origin + '/api/chat') ||
+          // 处理其他相对路径格式
+          url === '/api/chat' ||
+          url.endsWith('/api/chat')
+        )
+      ) || (
+        // 兼容处理：确保所有到本域名的/api/chat请求都被拦截
+        url.includes('/api/chat') && 
+        new URL(url, window.location.origin).origin === window.location.origin
       );
+      
+      // 添加调试日志
+      if (url.includes('/api/chat')) {
+        console.log('🔍 API拦截器检测到聊天请求:', {
+          url,
+          origin: window.location.origin,
+          isLocalApiRequest,
+          userAgent: navigator.userAgent.includes('Chrome') ? 'Chrome' : 'Other'
+        });
+      }
+      
       if (isLocalApiRequest) {
+        console.log('✅ 请求被本地拦截器处理');
         try {
           const body = init?.body ? JSON.parse(init.body as string) : {};
           const isStream = body.stream !== false;
+          
+          console.log('📡 处理聊天请求:', {
+            isStream,
+            model: body.model || DEFAULT_CONFIG.model,
+            messageCount: body.messages?.length || 0
+          });
+          
           if (isStream) {
             const stream = await this.handleChatStream(body);
+            console.log('🌊 返回流式响应');
             return new Response(stream, {
               status: 200,
               headers: {
@@ -233,6 +266,12 @@ export class ApiAdapterService {
             });
           } else {
             const result = await this.handleChat(body);
+            console.log('💬 返回非流式响应:', {
+              hasContent: !!result.content,
+              hasError: !!result.error,
+              hasUsage: !!result.usage,
+              completionTokens: result.usage?.completionTokens
+            });
             return new Response(JSON.stringify(result), {
               status: result.error ? 400 : 200,
               headers: {
@@ -244,6 +283,7 @@ export class ApiAdapterService {
             });
           }
         } catch (error) {
+          console.error('❌ 本地API处理失败:', error);
           return new Response(
             JSON.stringify({
               error: error instanceof Error ? error.message : 'Internal server error'
@@ -259,7 +299,11 @@ export class ApiAdapterService {
             }
           );
         }
+      } else if (url.includes('/api/chat')) {
+        console.log('⚠️  请求未被拦截，将发送到远程服务器');
       }
+      
+      // 处理连接测试请求
       if (url.includes('/api/ping')) {
         try {
           const body = init?.body ? JSON.parse(init.body as string) : {};
@@ -284,6 +328,7 @@ export class ApiAdapterService {
           );
         }
       }
+      
       return originalFetch(input, init);
     };
     this.isInterceptorSetup = true;
