@@ -94,3 +94,9 @@ docker save -o 文件名.tar imageId
 ```bash
 scp wps-addon.tar root@192.168.6.67:/data/
 ```
+
+#### 清理异常状态容器
+
+```bash
+docker-compose down -v
+```
