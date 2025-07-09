@@ -5,8 +5,7 @@ title: 'Element UI 全局表格自适应'
 featured: false
 draft: false
 tags:
-  - 'AI'
-  - 'Prompt'
+  - 'tech'
 description: '不影响现有项目使用的情况下, 快速对el-table做自定义配置'
 ---
 
