@@ -100,3 +100,34 @@ scp wps-addon.tar root@192.168.6.67:/data/
 ```bash
 docker-compose down -v
 ```
+
+#### 查看容器 `镜像 ID`
+
+```bash
+docker inspect d1a6e2a8a2cf --format='{{.Image}}'
+```
+
+#### 查看容器 `镜像 ID`
+
+```bash
+docker inspect d1a6e2a8a2cf --format='{{.Image}}'
+```
+
+#### 查看容器当前状态
+
+```bash
+docker inspect d1a6e2a8a2cf --format='{{.State.Status}}'
+```
+
+#### ~/.bashrc 或 ~/.zshrc配置方法快捷批量获取信息, 执行docker-inspect-summary <container_id>
+
+```bash
+docker-inspect-summary() {
+  docker inspect "$1" --format='
+  Container: {{.Name}}
+  ID:        {{.Id}}
+  Image ID:  {{.Image}}
+  Image Tag: {{.Config.Image}}
+  Created:   {{.Created}}'
+}
+```
