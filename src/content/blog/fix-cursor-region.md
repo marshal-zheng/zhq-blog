@@ -13,7 +13,7 @@ description: '修复使用cursorr时报'
 经过咨询网友，了解到可以通过开启全局代理来解决，开启全局担心 VPN 流量不可控, 这里给一个 IDE 的 User Settings 配置的方式, 在此记录:
 
 1. 按下 Ctrl/Cmd + Shift + P 打开命令面板。
-2. 输入并选择 `Preferences: Open Settings (JSON)`（注意不要选择 “Open Default Settings (JSON)”）。
+2. 输入并选择 `Preferences: Open User Settings (JSON)`（注意不要选择 “Open Default Settings (JSON)”）。
 3. 在打开的 User Settings 文件中，粘贴并调整如下代理配置：
 
   ```json
