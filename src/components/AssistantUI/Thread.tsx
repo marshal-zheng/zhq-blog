@@ -44,7 +44,7 @@ export const Thread: FC = () => {
       }}
     >
       <ThreadPrimitive.Viewport className="flex flex-1 h-full w-full flex-col items-center overflow-y-auto scroll-smooth bg-inherit">
-        <div className="w-full px-3 py-2 flex flex-col items-center">
+        <div className="w-full px-4 py-2 flex flex-col items-center">
           <ThreadWelcome />
 
           <ThreadPrimitive.Messages
