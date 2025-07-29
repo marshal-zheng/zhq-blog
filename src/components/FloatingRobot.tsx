@@ -44,9 +44,10 @@ const Spline = lazy(() => import('@splinetool/react-spline'));
 
 interface FloatingRobotProps {
   mode?: 'fullscreen' | 'bubble'; // 全屏模式或气泡模式
+  systemPrompt?: string; // 自定义系统提示词
 }
 
-const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) => {
+const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen', systemPrompt }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -465,7 +466,7 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
           </div>
         </div>
         <div className="h-[calc(100%-80px)]">
-          <AssistantPopover />
+          <AssistantPopover systemPrompt={systemPrompt} />
         </div>
       </div>
     </div>
@@ -583,7 +584,7 @@ const FloatingRobot: React.FC<FloatingRobotProps> = ({ mode = 'fullscreen' }) =>
                     backgroundColor: 'transparent'
                   }}
                 >
-                  <AssistantPopover />
+                  <AssistantPopover systemPrompt={systemPrompt} />
                 </div>
               </div>
             </div>

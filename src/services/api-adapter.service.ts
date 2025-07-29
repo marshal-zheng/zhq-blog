@@ -28,6 +28,7 @@ export interface ChatRequest {
   }>;
   model?: string;
   stream?: boolean;
+  systemPrompt?: string; // 系统提示词，用于约束AI助手的回答范围
 }
 
 // API 响应接口定义
@@ -131,6 +132,28 @@ export class ApiAdapterService {
       role: msg.role,
       content: this.extractTextContent(msg.content)
     }));
+  }
+
+  /**
+   * 处理系统提示词，将其添加到消息数组开头
+   */
+  private processMessagesWithSystemPrompt(messages: ChatRequest['messages'], systemPrompt?: string): Array<{ role: 'system' | 'user' | 'assistant'; content: string }> {
+    const convertedMessages = this.convertMessages(messages);
+    
+    // 如果有系统提示词，且现有消息中没有系统消息，则添加到开头
+    if (systemPrompt && systemPrompt.trim()) {
+      const hasSystemMessage = convertedMessages.some(msg => msg.role === 'system');
+      
+      if (!hasSystemMessage) {
+        // 在消息数组开头插入系统提示词
+        convertedMessages.unshift({
+          role: 'system',
+          content: systemPrompt.trim()
+        });
+      }
+    }
+    
+    return convertedMessages;
   }
 
   /**
@@ -263,7 +286,7 @@ export class ApiAdapterService {
       if (!request.messages || !Array.isArray(request.messages) || request.messages.length === 0) {
         throw new Error('Invalid request: messages array is required and cannot be empty.');
       }
-      const convertedMessages = this.convertMessages(request.messages);
+      const convertedMessages = this.processMessagesWithSystemPrompt(request.messages, request.systemPrompt);
       const model = request.model || DEFAULT_CONFIG.model;
       
       const client = this.createClient();
@@ -303,7 +326,7 @@ export class ApiAdapterService {
       if (!request.messages || !Array.isArray(request.messages) || request.messages.length === 0) {
         throw new Error('Invalid request: messages array is required and cannot be empty.');
       }
-      const convertedMessages = this.convertMessages(request.messages);
+      const convertedMessages = this.processMessagesWithSystemPrompt(request.messages, request.systemPrompt);
       const model = request.model || DEFAULT_CONFIG.model;
       const client = this.createClient();
       const result = await generateText({
