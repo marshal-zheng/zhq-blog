@@ -93,3 +93,17 @@ HOMEBREW_NO_AUTO_UPDATE=1 brew install llama.cpp --verbose
 export https_proxy=http://127.0.0.1:4780 http_proxy=http://127.0.0.1:4780 all_proxy=socks5://127.0.0.1:4781
 ```
 > 此命令为当前终端会话设置HTTP、HTTPS和SOCKS代理，使网络请求通过指定的代理服务器。
+
+#### 使用 rsync 复制文件夹（排除虚拟环境文件夹）
+
+```bash
+rsync -av --exclude 'venv' source_dir/ target_dir/
+```
+> 该命令用于高效地复制文件夹内容到目标目录，并排除名为 `venv` 的虚拟环境文件夹。  
+> - `rsync`：文件和目录同步工具  
+> - `-a`(archive)：归档模式，保留文件属性  
+> - `-v`(verbose)：显示详细输出  
+> - `--exclude 'venv'`：同步时排除 `venv` 文件夹  
+> - `source_dir/`：源目录  
+> - `target_dir/`：目标目录  
+
