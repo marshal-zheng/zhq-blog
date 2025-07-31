@@ -3,7 +3,7 @@ author: ZHQ
 pubDatetime: 2025-06-16T19:03:34.000+08:00
 title: 'Turborepo介绍'
 featured: false
-slug: 'cursor-migration'
+slug: 'turborepo'
 tags:
   - 'frontend'
 description: 'Turborepo调研报告'
