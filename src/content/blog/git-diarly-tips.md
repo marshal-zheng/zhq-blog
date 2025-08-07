@@ -237,6 +237,13 @@ git commit -m "还原 path/to/file1 和 path/to/file2 到提交 <commit-id> 之�
 git log --pretty=format:"%h %s" | grep "存储卷列表"
 ```
 
+#### stash 除指定文件外的所有更改
+
+```bash
+git stash push -m "Stash all except scripts/start.js" --include-untracked -- . ':(exclude)scripts/start.js'
+```
+> 💡 Tips: 该命令会将除了 `scripts/start.js` 之外的所有更改（包括未跟踪文件）暂存到 stash 中，`scripts/start.js` 保持在工作区不变。
+
 
 
 
