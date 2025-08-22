@@ -1,0 +1,61 @@
+// {
+//   "Orange Text Span": {
+//     "prefix": "orange",
+//     "body": [
+//       "<span className=\"text-orange-500\">${1}</span>"
+//     ],
+//     "description": "插入橙色分词标签"
+//   },
+//   "Red Text Span": {
+//     "prefix": "red",
+//     "body": [
+//       "<span className=\"text-red-500\">${1}</span>"
+//     ],
+//     "description": "插入红色分词标签"
+//   },
+//   "Green Text Span": {
+//     "prefix": "green",
+//     "body": [
+//       "<span className=\"text-green-500\">${1}</span>"
+//     ],
+//     "description": "插入绿色分词标签"
+//   },
+//   "Blue Text Span": {
+//     "prefix": "blue",
+//     "body": [
+//       "<span className=\"text-blue-500\">${1}</span>"
+//     ],
+//     "description": "插入蓝色分词标签"
+//   }
+// }
+
+{
+  "Orange Text Span": {
+    "prefix": "orange",
+    "body": [
+      "<span className=\"text-orange-500\">${TM_SELECTED_TEXT}</span>"
+    ],
+    "description": "包裹选中文本为橙色"
+  },
+  "Red Text Span": {
+    "prefix": "red",
+    "body": [
+      "<span className=\"text-red-500\">${TM_SELECTED_TEXT}</span>"
+    ],
+    "description": "包裹选中文本为红色"
+  },
+  "Green Text Span": {
+    "prefix": "green",
+    "body": [
+      "<span className=\"text-green-500\">${TM_SELECTED_TEXT}</span>"
+    ],
+    "description": "包裹选中文本为绿色"
+  },
+  "Blue Text Span": {
+    "prefix": "blue",
+    "body": [
+      "<span className=\"text-blue-500\">${TM_SELECTED_TEXT}</span>"
+    ],
+    "description": "包裹选中文本为蓝色"
+  }
+}
