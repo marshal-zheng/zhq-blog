@@ -6,10 +6,10 @@ featured: false
 slug: 'turborepo'
 tags:
   - 'frontend'
+  - 'DeepSearch'
 description: 'Turborepo调研报告'
 ---
 
-```markdown
 在当代Web开发领域，规模化管理复杂性已成为核心挑战。为了促进代码共享、确保工具链一致性并简化跨项目重构，业界重新燃起了对“Monorepo”（单一代码库）架构模式的兴趣 1。然而，这种架构的复兴也带来了一个严峻的瓶颈，官方文档将其称为“Monorepo问题”（the monorepo problem）4。当一个代码库中包含数十甚至数百个独立的包（package）时，每个包都拥有自己的构建、测试和代码检查（linting）任务。这导致一个单一的代码库可能需要执行数千个任务，从而造成反馈循环的严重延迟和持续集成/持续交付（CI/CD）流程的效率低下 4。
 正是在这一背景下，Turborepo 应运而生。它是一个专为解决此规模化难题而设计的高性能构建系统，旨在为 JavaScript 和 TypeScript 代码库提供前所未有的速度与效率 4。本报告将从其诞生背景、核心设计哲学、真实应用场景、当前最佳实践及高级用法等多个维度，对 Turborepo 进行一次全面、深入且富有洞察力的剖析。
 
