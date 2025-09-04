@@ -99,7 +99,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@assistant-ui/react-ai-sdk@npm:^0.10.14":
+"@assistant-ui/react-ai-sdk@npm:0.10.14":
   version: 0.10.14
   resolution: "@assistant-ui/react-ai-sdk@npm:0.10.14"
   dependencies:
@@ -2974,7 +2974,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"assistant-stream@npm:^0.2.17":
+"assistant-stream@npm:0.2.17, assistant-stream@npm:^0.2.17":
   version: 0.2.17
   resolution: "assistant-stream@npm:0.2.17"
   dependencies:
@@ -3042,7 +3042,7 @@ __metadata:
     "@ai-sdk/anthropic": "npm:^1.2.12"
     "@ai-sdk/openai": "npm:^1.3.22"
     "@assistant-ui/react": "npm:^0.10.24"
-    "@assistant-ui/react-ai-sdk": "npm:^0.10.14"
+    "@assistant-ui/react-ai-sdk": "npm:0.10.14"
     "@assistant-ui/react-markdown": "npm:^0.10.5"
     "@astrojs/check": "npm:^0.9.3"
     "@astrojs/mdx": "npm:^3.0.0"
@@ -3064,6 +3064,7 @@ __metadata:
     "@types/react": "npm:^18.3.6"
     "@typescript-eslint/parser": "npm:^8.5.0"
     ai: "npm:^4.3.16"
+    assistant-stream: "npm:0.2.17"
     astro: "npm:^4.16.18"
     astro-eslint-parser: "npm:^1.0.3"
     astro-i18next: "npm:^1.0.0-beta.21"

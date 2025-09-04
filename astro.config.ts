@@ -10,6 +10,8 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import mdx from '@astrojs/mdx'
 import path from 'path';
+import { fileURLToPath } from 'url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://astro.build/config
 export default defineConfig({
@@ -51,12 +53,14 @@ export default defineConfig({
   },
   vite: {
     optimizeDeps: {
-      exclude: ["@resvg/resvg-js"],
+      exclude: ["@resvg/resvg-js", "assistant-stream/ai-sdk"],
       include: ["@splinetool/runtime"]
     },
     resolve: {
       alias: {
         '@': path.resolve('./src'),
+        // Shim for missing subpath export in assistant-stream (imported by @assistant-ui/react-ai-sdk)
+        'assistant-stream/ai-sdk': path.resolve('./src/shims/assistant-stream-ai-sdk.ts'),
       },
     },
   },
